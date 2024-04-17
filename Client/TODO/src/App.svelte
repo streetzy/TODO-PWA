@@ -95,8 +95,8 @@
         align-items: center;
     }
     .gg{
-        width: 30%;
-        height: 30vh;
+        width: 250px;
+        height: 500px;
         background-color: grey;
         border-radius: 25px;
         
@@ -106,7 +106,8 @@
         display: flex;
         justify-content: center;
         border-radius: 25px;
-        
+        width: 100%;
+        margin-top: 30px;
     }
     .buttom{
         width: 120px;

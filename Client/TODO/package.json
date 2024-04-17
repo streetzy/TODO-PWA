@@ -19,6 +19,7 @@
     "vite": "^5.1.4"
   },
   "dependencies": {
+    "express": "^4.19.2",
     "marked": "^12.0.1"
   }
 }
