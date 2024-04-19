@@ -3,17 +3,22 @@ import mongoose from 'mongoose'
 import { Authrouter } from './AuthRouter/Auth';
 import express from 'express';
 import { AuthMidleware } from './AuthRouter/Auth';
-import { nextTick } from 'process';
 
+import { user } from './modules';
+import { Console, log } from 'console';
 mongoose.connect('mongodb://brandalik_adam_64d3f_hsqzv:oobQvcBNpvKjMG5vvZmGilXUkcaY8OZc@hosting.ssps.cajthaml.eu:3336/brandalik_adam_64d3f_hsqzv_db?authSource=brandalik_adam_64d3f_hsqzv_db')
 
 const app = express();
 const PORT = 3000;
-
-AuthMidleware
 app.use(express.json());
 
 app.use(Authrouter)
+
+
+user.create({email: "asdfsdf",password: "asdasd"}).then(()=>{console.log("gg")})
+    
+
+
 
 app.listen(PORT, () => {
     console.log(`Server is running on http://localhost:${PORT}`);

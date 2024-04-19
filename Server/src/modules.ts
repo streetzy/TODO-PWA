@@ -1,67 +1,47 @@
 import mongoose from 'mongoose'
 
-mongoose.connect('mongodb://brandalik_adam_64d3f_hsqzv:oobQvcBNpvKjMG5vvZmGilXUkcaY8OZc@hosting.ssps.cajthaml.eu:3336/brandalik_adam_64d3f_hsqzv_db?authSource=brandalik_adam_64d3f_hsqzv_db')
+
 
 const userSchema = new mongoose.Schema({
-    _id: {type: mongoose.Schema.Types.ObjectId,
-            index: true,
-            required: true,
-            auto: true,
-        },
-    createdAt: { Type :Date , default : Date.now},
+
     userName: String,
     email: String,
     password: String,
-    groups: [{Type: mongoose.Schema.Types.ObjectId, ref:'groupSchema'}],
-    invitelist: [{Type: mongoose.Schema.Types.ObjectId, ref:'inviteSchema'}]
+    groups: [{type: mongoose.Types.ObjectId, ref:'group'}],
+    invitelist: [{type: mongoose.Types.ObjectId, ref:'invite'}]
 })
 
 const todoSchema = new mongoose.Schema({
-    _id: {type: mongoose.Schema.Types.ObjectId,
-        index: true,
-        required: true,
-        auto: true,
-    },
-    createdAt: { Type :Date , default : Date.now},
+
+
     todoName: String,
     status: String,
     todoContent: String,
-    authorId: {Type: mongoose.Schema.Types.ObjectId, ref:'userSchema'},
+    authorId: {type: mongoose.Types.ObjectId, ref:'User'},
     deadline: Date,
-    group: {Type: mongoose.Schema.Types.ObjectId, ref:'groupSchema'}
+    group: {type: mongoose.Types.ObjectId, ref:'group'}
 })
 
 const groupSchema = new mongoose.Schema({
-    _id: {type: mongoose.Schema.Types.ObjectId,
-        index: true,
-        required: true,
-        auto: true,
-    },
-    createdAt: { Type :Date , default : Date.now},
-    todos:[{Type: mongoose.Schema.Types.ObjectId, ref:'todoSchema'}],
+
+
+    todos:[{type: mongoose.Types.ObjectId, ref:'todo'}],
     groupName: String,
-    invitedUsers: [{Type: mongoose.Schema.Types.ObjectId, ref:'userSchema'}],
-    owner: {Type: mongoose.Schema.Types.ObjectId, ref:'userSchema'},
-    admins:[{Type: mongoose.Schema.Types.ObjectId, ref:'userSchema'}],
-    members:[{Type: mongoose.Schema.Types.ObjectId, ref:'userSchema'}]
+    invitedUsers: [{type: mongoose.Types.ObjectId, ref:'User'}],
+    owner: {type: mongoose.Types.ObjectId, ref:'User'},
+    admins:[{type: mongoose.Types.ObjectId, ref:'User'}],
+    members:[{type: mongoose.Types.ObjectId, ref:'User'}]
 })
 
 const inviteSchema = new mongoose.Schema({
-    _id:  {type: mongoose.Schema.Types.ObjectId,
-        index: true,
-        required: true,
-        auto: true,
-    },
-    invited: {Type: mongoose.Schema.Types.ObjectId, ref:'userSchema'},
-    group: {Type: mongoose.Schema.Types.ObjectId, ref:'groupSchema'}
+
+    invited: {type: mongoose.Types.ObjectId, ref:'User'},
+    group: {type: mongoose.Types.ObjectId, ref:'groupSchema'},
+
 })
-export const user = mongoose.model('user',userSchema)
+export const user = mongoose.model('User',userSchema)
 export const todo = mongoose.model('todo',todoSchema)
 export const group = mongoose.model('group',groupSchema)
 export const invite = mongoose.model('invite',inviteSchema)
 
 
-async ()=>{
-    await mongoose.connect('mongodb://brandalik_adam_64d3f_hsqzv:oobQvcBNpvKjMG5vvZmGilXUkcaY8OZc@hosting.ssps.cajthaml.eu:3336/brandalik_adam_64d3f_hsqzv_db?authSource=brandalik_adam_64d3f_hsqzv_db')
-
-}

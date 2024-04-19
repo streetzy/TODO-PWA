@@ -15,9 +15,11 @@ export function AuthMidleware(req: express.Request, res: express.Response, next 
 Authrouter.post('/register', (req: express.Request, res: express.Response) => {
     const NewUser = new user
     if(Joi.string().email==req.body.email && req.body.password.length > 8){
-        NewUser.email = req.body.email
-        NewUser.password = Md5.hashStr(req.body.password)
-        NewUser.save()
+        async()=>{
+            NewUser.email = req.body.email
+            NewUser.password = Md5.hashStr(req.body.password)
+            await NewUser.save()
+        }
     }
     
 
