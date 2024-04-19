@@ -10,7 +10,7 @@ mongoose.connect('mongodb://brandalik_adam_64d3f_hsqzv:oobQvcBNpvKjMG5vvZmGilXUk
 const app = express();
 const PORT = 3000;
 
-const gg = AuthMidleware
+AuthMidleware
 app.use(express.json());
 
 app.use(Authrouter)

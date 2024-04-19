@@ -12,7 +12,7 @@ const userSchema = new mongoose.Schema({
     userName: String,
     email: String,
     password: String,
-    todoLists: [{Type: mongoose.Schema.Types.ObjectId, ref:'todoListSchema'}],
+    groups: [{Type: mongoose.Schema.Types.ObjectId, ref:'groupSchema'}],
     invitelist: [{Type: mongoose.Schema.Types.ObjectId, ref:'inviteSchema'}]
 })
 
@@ -27,10 +27,11 @@ const todoSchema = new mongoose.Schema({
     status: String,
     todoContent: String,
     authorId: {Type: mongoose.Schema.Types.ObjectId, ref:'userSchema'},
-    deadline: Date
+    deadline: Date,
+    group: {Type: mongoose.Schema.Types.ObjectId, ref:'groupSchema'}
 })
 
-const todoListSchema = new mongoose.Schema({
+const groupSchema = new mongoose.Schema({
     _id: {type: mongoose.Schema.Types.ObjectId,
         index: true,
         required: true,
@@ -38,7 +39,8 @@ const todoListSchema = new mongoose.Schema({
     },
     createdAt: { Type :Date , default : Date.now},
     todos:[{Type: mongoose.Schema.Types.ObjectId, ref:'todoSchema'}],
-    todoListName: String,
+    groupName: String,
+    invitedUsers: [{Type: mongoose.Schema.Types.ObjectId, ref:'userSchema'}],
     owner: {Type: mongoose.Schema.Types.ObjectId, ref:'userSchema'},
     admins:[{Type: mongoose.Schema.Types.ObjectId, ref:'userSchema'}],
     members:[{Type: mongoose.Schema.Types.ObjectId, ref:'userSchema'}]
@@ -51,11 +53,11 @@ const inviteSchema = new mongoose.Schema({
         auto: true,
     },
     invited: {Type: mongoose.Schema.Types.ObjectId, ref:'userSchema'},
-    todoList: {Type: mongoose.Schema.Types.ObjectId, ref:'todoListSchema'}
+    group: {Type: mongoose.Schema.Types.ObjectId, ref:'groupSchema'}
 })
 export const user = mongoose.model('user',userSchema)
 export const todo = mongoose.model('todo',todoSchema)
-export const todoList = mongoose.model('todoList',todoListSchema)
+export const group = mongoose.model('group',groupSchema)
 export const invite = mongoose.model('invite',inviteSchema)
 
 
