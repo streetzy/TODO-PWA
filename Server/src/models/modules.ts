@@ -7,6 +7,7 @@ const userSchema = new mongoose.Schema({
     userName: String,
     email: String,
     password: String,
+    refreshToken: String,
     groups: [{type: mongoose.Types.ObjectId, ref:'group'}],
     invitelist: [{type: mongoose.Types.ObjectId, ref:'invite'}]
 })
@@ -34,7 +35,7 @@ const groupSchema = new mongoose.Schema({
 })
 
 const inviteSchema = new mongoose.Schema({
-
+    inviteAuthor:{type: mongoose.Types.ObjectId, ref:'User'},
     invited: {type: mongoose.Types.ObjectId, ref:'User'},
     group: {type: mongoose.Types.ObjectId, ref:'groupSchema'},
 
