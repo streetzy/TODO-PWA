@@ -1,21 +1,25 @@
 import mongoose from 'mongoose'
 import dotenv from 'dotenv'
-import { Authrouter } from './AuthRouter/Auth';
+import { Authrouter } from './AuthRouter/Auth.js';
 import express from 'express';
-import { AuthMidleware } from './AuthRouter/Auth';
+import { AuthMidleware } from './AuthRouter/Auth.js';
 
-import { user } from './modules';
+import { user } from './models/modules.js';
 import { Console, log } from 'console';
 dotenv.config();
-mongoose.connect("mongodb://brandalik_adam_64d3f_hsqzv:oobQvcBNpvKjMG5vvZmGilXUkcaY8OZc@hosting.ssps.cajthaml.eu:3336/brandalik_adam_64d3f_hsqzv_db?authSource=brandalik_adam_64d3f_hsqzv_db")
+mongoose.connect(String(process.env.MONGO_URL)).then(async()=>{
+    console.log("DB connected");
+})
 const app = express();
 const PORT = 3000;
 app.use(express.json());
 
-app.use(Authrouter)
+app.use('/',Authrouter)
 
-
-user.create({email: "asdfsdf",password: "asdasd"}).then(()=>{console.log("gg")})
+app.get('/',(req,res)=>{
+    console.log("gg")
+    res.status(200)
+})
     
 
 
