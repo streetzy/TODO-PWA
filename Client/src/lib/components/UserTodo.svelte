@@ -1,4 +1,22 @@
 <script lang="ts">
+
+    async function getUserData(userId: string) {
+
+    }
+
+    async function removeTodo(todoId: string) {
+        
+    }
+
+    async function moveTo(todoId: string) {
+
+    }
+
+    async function showInformation(todoId: string) {
+
+    }  
+
+    getUserData("tempString");
 </script>
     
 <main>
@@ -24,9 +42,9 @@
                         <h3>TODOITEM</h3>
                     </div>
                     <div class="buttons">
-                        <button class="to-working-on"></button>
-                        <button class="todo-info"></button>
-                        <button class="remove"></button>
+                        <button on:click={() => moveTo("tempString")} class="to-working-on"></button>
+                        <button on:click={() => showInformation("tempString")} class="todo-info"></button>
+                        <button on:click={() => removeTodo("tempString")} class="remove"></button>
                     </div>
                 </div>
             </div>
@@ -44,9 +62,9 @@
                         <h3>TODOITEM</h3>
                     </div>
                     <div class="buttons">
-                        <button class="to-completed"></button>
-                        <button class="todo-info"></button>
-                        <button class="remove"></button>
+                        <button on:click={() => moveTo("tempString")} class="to-completed"></button>
+                        <button on:click={() => showInformation("tempString")} class="todo-info"></button>
+                        <button on:click={() => removeTodo("tempString")} class="remove"></button>
                     </div>
                 </div>
             </div>
@@ -64,8 +82,8 @@
                         <h3>TODOITEM</h3>
                     </div>
                     <div class="buttons">
-                        <button class="todo-info"></button>
-                        <button class="remove"></button>
+                        <button on:click={() => showInformation("tempString")} class="todo-info"></button>
+                        <button on:click={() => removeTodo("tempString")} class="remove"></button>
                     </div>
                 </div>
             </div>
