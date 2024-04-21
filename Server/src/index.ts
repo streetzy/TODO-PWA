@@ -3,24 +3,22 @@ import dotenv from "dotenv";
 import express from "express";
 import cors from "cors";
 import bodyParser from "body-parser";
-import {  login } from './endpoints/Login.js';
-import { AuthMidleware } from './endpoints/Middleware/AuthMid.js';
+import { login } from "./endpoints/Login.js";
+import { AuthMidleware } from "./endpoints/Middleware/AuthMid.js";
 import { addTodo } from "./endpoints/addTodo.js";
 import { deleteTodo } from "./endpoints/deleteTodo.js";
 import { getTodo } from "./endpoints/getTodo.js";
 import { patchTodo } from "./endpoints/patchTodo.js";
-import { register } from './endpoints/Register.js';
-import { getToken } from './endpoints/getToken.js';
-import { logOut } from './endpoints/logOut.js';
-import { addGroup } from './endpoints/addGroup.js';
-import { getGroup } from './endpoints/getGroup.js';
-import { patchGroup } from './endpoints/patchGroup.js';
-
-
+import { register } from "./endpoints/Register.js";
+import { getToken } from "./endpoints/getToken.js";
+import { logOut } from "./endpoints/logOut.js";
+import { addGroup } from "./endpoints/addGroup.js";
+import { getGroup } from "./endpoints/getGroup.js";
+import { patchGroup } from "./endpoints/patchGroup.js";
 
 const app = express();
 const PORT = 3000;
-const AuthRouter: express.Router = express.Router()
+const AuthRouter: express.Router = express.Router();
 
 dotenv.config();
 mongoose.connect(String(process.env.MONGO_URL)).then(async () => {
@@ -35,18 +33,19 @@ app.use(
 
 app.use(bodyParser.text());
 app.use(bodyParser.json());
-app.use(AuthRouter)
 
-AuthRouter.use((req,res,next)=>AuthMidleware(req,res,next))
+AuthRouter.use((req, res, next) => AuthMidleware(req, res, next));
 
-app.post('/user',(req,res)=>register(req,res))  
-app.post('/login',(req,res)=>login(req,res))
-app.post('/token',(req,res)=>getToken(req,res))
-app.delete('/login',(req,res)=>logOut(req,res))
+app.post("/user", (req, res) => register(req, res));
+app.post("/login", (req, res) => login(req, res));
+app.post("/token", (req, res) => getToken(req, res));
+app.delete("/login", (req, res) => logOut(req, res));
 
-AuthRouter.post('/group',(req,res)=>addGroup(req,res))
-AuthRouter.get('/group/:groupId',(req,res)=>getGroup(req,res))
-AuthRouter.patch('/group/:groupId',(req,res)=>patchGroup(req,res))
+app.use(AuthRouter);
+
+AuthRouter.post("/group", (req, res) => addGroup(req, res));
+AuthRouter.get("/group/:groupId", (req, res) => getGroup(req, res));
+AuthRouter.patch("/group/:groupId", (req, res) => patchGroup(req, res));
 
 AuthRouter.post("/todo", (req, res) => addTodo(req, res));
 AuthRouter.delete("/todo/:todoId", (req, res) => deleteTodo(req, res));
