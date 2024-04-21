@@ -31,8 +31,6 @@ app.delete("/todo/:todoId", (req, res) => deleteTodo(req, res));
 app.get("/todo/:todoId", (req, res) => getTodo(req, res));
 app.patch("/todo/:todoId", (req, res) => patchTodo(req, res));
 
-app.get("/group/:groupId", (req, res) => getGroup(req, res));
-
 app.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`);
 });
