@@ -7,7 +7,6 @@ import { addTodo } from "./endpoints/addTodo.js";
 import { deleteTodo } from "./endpoints/deleteTodo.js";
 import { getTodo } from "./endpoints/getTodo.js";
 import { patchTodo } from "./endpoints/patchTodo.js";
-import { getGroup } from "./endpoints/getGroup.js";
 
 const app = express();
 const PORT = 3000;
