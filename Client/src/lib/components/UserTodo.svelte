@@ -1,11 +1,12 @@
 <script lang="ts">
+    
 
-    async function getUserData(userId: string) {
-
+    async function getUserData(groupId: string) {
+    
     }
 
     async function removeTodo(todoId: string) {
-        
+
     }
 
     async function moveTo(todoId: string) {
@@ -16,7 +17,7 @@
 
     }  
 
-    getUserData("tempString");
+    const userData = getUserData("tempString");
 </script>
     
 <main>

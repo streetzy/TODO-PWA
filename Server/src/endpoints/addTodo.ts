@@ -3,6 +3,7 @@ import { todo } from "../modules.js";
 
 export async function addTodo(req: Request, res: Response) {
   console.log(req.body);
+
   const newTodo = new todo({
     todoName: req.body.todoName,
     status: req.body.todoStatus,
