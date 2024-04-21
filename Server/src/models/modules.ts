@@ -28,7 +28,7 @@ const groupSchema = new mongoose.Schema({
 
 const inviteSchema = new mongoose.Schema({
   invited: { type: mongoose.Types.ObjectId, ref: "User", required: true },
-  group: { type: mongoose.Types.ObjectId, ref: "groupSchema", required: true },
+  group: { type: mongoose.Types.ObjectId, ref: "group", required: true },
 });
 export const user = mongoose.model("User", userSchema);
 export const todo = mongoose.model("todo", todoSchema);
