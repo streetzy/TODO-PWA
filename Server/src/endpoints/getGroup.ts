@@ -1,12 +1,12 @@
 import mongoose from 'mongoose'
-import { user } from '../models/modules.ts';
-import { todo } from '../models/modules.ts';
+import { user } from '../models/modules.js';
+import { todo } from '../models/modules.js';
 import express from 'express';
 import Joi from 'joi';
 import {Md5} from 'ts-md5';
 import jwt from 'jsonwebtoken'
 import { error,  time } from 'console';
-import { group } from '../models/modules.ts';
+import { group } from '../models/modules.js';
 import dotenv from 'dotenv'
 import { JsxFlags } from 'typescript';
 

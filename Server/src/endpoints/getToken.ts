@@ -1,10 +1,10 @@
 import  express  from "express"
 import jwt from 'jsonwebtoken'
 import dotenv from 'dotenv'
-import { user } from '../models/modules.ts';
+import { user } from '../models/modules.js';
 import {Md5} from 'ts-md5';
 dotenv.config();
-import { generateToke } from "./Login.ts";
+import { generateToke } from "./Login.js";
 export async function getToken(req: express.Request, res: express.Response) {
     
     jwt.verify(String(req.body.token), String(process.env.REFRESH_TOKEN),async(err, _id)=>{

@@ -1,9 +1,9 @@
 import  express  from "express"
 import jwt from 'jsonwebtoken'
 import dotenv from 'dotenv'
-import { user } from '../models/modules.ts';
+import { user } from '../models/modules.js';
 dotenv.config();
-import { generateToke } from "./Login.ts";
+import { generateToke } from "./Login.js";
 import {Md5} from 'ts-md5';
 export async function logOut(req: express.Request, res: express.Response) {
     try{

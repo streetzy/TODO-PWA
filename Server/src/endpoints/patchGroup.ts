@@ -1,14 +1,8 @@
-import mongoose from 'mongoose'
-import { user } from '../models/modules.ts';
-import { todo } from '../models/modules.ts';
+
 import express from 'express';
-import Joi from 'joi';
-import {Md5} from 'ts-md5';
-import jwt from 'jsonwebtoken'
-import { error,  time } from 'console';
-import { group } from '../models/modules.ts';
-import dotenv from 'dotenv'
-import { JsxFlags } from 'typescript';
+
+import { group } from '../models/modules.js';
+
 export async function patchGroup(req: express.Request, res: express.Response){
 
     try{

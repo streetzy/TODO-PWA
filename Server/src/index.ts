@@ -1,18 +1,16 @@
 import mongoose from 'mongoose'
 import dotenv from 'dotenv'
-import {  login } from './endpoints/Login.ts';
+import {  login } from './endpoints/Login.js';
 import express from 'express';
-import { AuthMidleware } from './endpoints/Middleware/AuthMid.ts';
+import { AuthMidleware } from './endpoints/Middleware/AuthMid.js';
 import cors from 'cors';
 
-import { user } from './models/modules.ts';
-import { Console, log } from 'console';
-import { register } from './endpoints/Register.ts';
-import { getToken } from './endpoints/getToken.ts';
-import { logOut } from './endpoints/logOut.ts';
-import { addGroup } from './endpoints/addGroup.ts';
-import { getGroup } from './endpoints/getGroup.ts';
-import { patchGroup } from './endpoints/patchGroup.ts';
+import { register } from './endpoints/Register.js';
+import { getToken } from './endpoints/getToken.js';
+import { logOut } from './endpoints/logOut.js';
+import { addGroup } from './endpoints/addGroup.js';
+import { getGroup } from './endpoints/getGroup.js';
+import { patchGroup } from './endpoints/patchGroup.js';
 dotenv.config();
 mongoose.connect(String(process.env.MONGO_URL)).then(async()=>{
     console.log("DB connected");

@@ -5,9 +5,9 @@ import {Md5} from 'ts-md5';
 import jwt from 'jsonwebtoken'
 import { error, time } from 'console';
 import dotenv from 'dotenv'
-import { generateToke } from '../Login.ts';
+import { generateToke } from '../Login.js';
 import { access } from 'fs';
-import { user } from '../../models/modules.ts';
+import { user } from '../../models/modules.js';
 dotenv.config();
 
 
