@@ -3,24 +3,22 @@ import dotenv from "dotenv";
 import express from "express";
 import cors from "cors";
 import bodyParser from "body-parser";
-import {  login } from './endpoints/Login.js';
-import { AuthMidleware } from './endpoints/Middleware/AuthMid.js';
+import { login } from "./endpoints/Login.js";
+import { AuthMidleware } from "./endpoints/Middleware/AuthMid.js";
 import { addTodo } from "./endpoints/addTodo.js";
 import { deleteTodo } from "./endpoints/deleteTodo.js";
 import { getTodo } from "./endpoints/getTodo.js";
 import { patchTodo } from "./endpoints/patchTodo.js";
-import { register } from './endpoints/Register.js';
-import { getToken } from './endpoints/getToken.js';
-import { logOut } from './endpoints/logOut.js';
-import { addGroup } from './endpoints/addGroup.js';
-import { getGroup } from './endpoints/getGroup.js';
-import { patchGroup } from './endpoints/patchGroup.js';
-
-
+import { register } from "./endpoints/Register.js";
+import { getToken } from "./endpoints/getToken.js";
+import { logOut } from "./endpoints/logOut.js";
+import { addGroup } from "./endpoints/addGroup.js";
+import { getGroup } from "./endpoints/getGroup.js";
+import { patchGroup } from "./endpoints/patchGroup.js";
 
 const app = express();
 const PORT = 3000;
-const AuthRouter: express.Router = express.Router()
+const AuthRouter: express.Router = express.Router();
 
 dotenv.config();
 mongoose.connect(String(process.env.MONGO_URL)).then(async () => {
