@@ -35,19 +35,19 @@ app.use(
 
 app.use(bodyParser.text());
 app.use(bodyParser.json());
-app.use(AuthRouter)
 
-AuthRouter.use((req,res,next)=>AuthMidleware(req,res,next))
+
+
 
 app.post('/user',(req,res)=>register(req,res))  
 app.post('/login',(req,res)=>login(req,res))
 app.post('/token',(req,res)=>getToken(req,res))
 app.delete('/login',(req,res)=>logOut(req,res))
-
+app.use(AuthRouter)
+AuthRouter.use((req,res,next)=>AuthMidleware(req,res,next))
 AuthRouter.post('/group',(req,res)=>addGroup(req,res))
 AuthRouter.get('/group/:groupId',(req,res)=>getGroup(req,res))
 AuthRouter.patch('/group/:groupId',(req,res)=>patchGroup(req,res))
-
 AuthRouter.post("/todo", (req, res) => addTodo(req, res));
 AuthRouter.delete("/todo/:todoId", (req, res) => deleteTodo(req, res));
 AuthRouter.get("/todo/:todoId", (req, res) => getTodo(req, res));
