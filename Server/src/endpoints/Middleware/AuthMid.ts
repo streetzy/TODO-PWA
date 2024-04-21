@@ -17,38 +17,27 @@ export async function AuthMidleware(req: express.Request, res: express.Response,
         const authHeader = req.headers['authorization']
         
     const token = authHeader && authHeader.split(' ')[1]
-    
+    console.log(authHeader)
     if (token != null){
-        jwt.verify(token, String(process.env.ACCESS_TOKEN),(err, _id)=>{
+        jwt.verify(token, String(process.env.ACCESS_TOKEN),(err, id)=>{
             if(err){
 
-                jwt.verify(String(req.body.token), String(process.env.REFRESH_TOKEN),async(err, _id)=>{
-                    if(err){
-                        res.status(401).send('refresh token not valid')
-                        console.log("refresh token not valid")
-                    }else{
-                        let User = await user.findOne({email: req.body.email}).exec();
-                        if (User?.refreshToken ==req.body.token){
-                            const accToken = generateToke(String(_id))
-                            res.status(200).json({accessToken : accToken})
-                            console.log("Newacc token generated")
-                        }else{
-                            res.status(401).send("gg")
-                            console.log("Invalid ref token")
-                        }
-                        
-                        res.status(401)
-                        console.log("Newacc token generated")
-                    }
-                })
-                
+
+             res.status(401).send("gg")
+             console.log("Invalid acc token")
+              return              
+
             }
             
+            
+            if(id){
+                req.body.id = id
+                let gg =  req.body.id.id
+                req.body.id = gg
+                console.log("authmidleware succesfull")
+                next()
 
-            req.body.id = _id
-            console.log("authmidleware succesfull"+ _id)
-            next()
-
+            }
         })
     }
     else{
