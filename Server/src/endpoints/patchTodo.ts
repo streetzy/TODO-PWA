@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 
-import { todo } from "../modules.js";
+import { todo } from "../models/modules.js";
 
 export async function patchTodo(
   req: Request<{ todoId: string }>,

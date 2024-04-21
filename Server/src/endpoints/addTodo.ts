@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { todo } from "../modules.js";
+import { todo } from "../models/modules.js";
 
 export async function addTodo(req: Request, res: Response) {
   console.log(req.body);

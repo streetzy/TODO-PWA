@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 import express from "express";
-import { group } from "../modules.js";
+import { group } from "../models/modules.js";
 
 export async function getGroup(req: express.Request, res: express.Response) {
   try {
