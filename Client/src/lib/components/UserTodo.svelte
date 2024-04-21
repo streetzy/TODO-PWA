@@ -1,8 +1,17 @@
 <script lang="ts">
-    
+    import { onMount } from "svelte";
+    import { userJsonData } from "../stores/data";
 
+    let userData = null;
+
+    onMount(() => {
+        userJsonData.subscribe(value => {
+            userData = value;
+        })
+    })
+    console.log(userData);
     async function getUserData(groupId: string) {
-    
+
     }
 
     async function removeTodo(todoId: string) {
@@ -17,7 +26,7 @@
 
     }  
 
-    const userData = getUserData("tempString");
+
 </script>
     
 <main>
@@ -228,8 +237,8 @@
     .buttons > button {
         border-style: solid;
         border-color:#e0dede;
-        width: 3rem;
-        height: 3rem;
+        width: 2rem;
+        height: 2rem;
         border-radius: 100%;
         overflow: hidden;
     }
@@ -259,6 +268,6 @@
         display: flex;
         justify-content: center;
         align-items: center;
-        font-size: 2.25rem;
+        font-size: 2rem;
     }
 </style>
