@@ -3,6 +3,7 @@ import mongoose from "mongoose";
 const userSchema = new mongoose.Schema({
   userName: { type: String, required: true },
   email: { type: String, required: true },
+  refreshToken: String,
   password: { type: String, required: true },
   groups: [{ type: mongoose.Types.ObjectId, ref: "group" }],
   invitelist: [{ type: mongoose.Types.ObjectId, ref: "invite" }],

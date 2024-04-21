@@ -1,0 +1,53 @@
+POST http://localhost:3000/user
+Content-Type: application/json
+
+{
+    "email":"addam.mimrix@miimrix.com",
+    "password":"asdasdojsdfgjdfgnjl"
+}
+
+###
+POST http://localhost:3000/login
+Content-Type: application/json
+
+{
+    "email":"addam.mimrix@miimrix.com",
+    "password":"asdasdojsdfgjdfgnjl"
+}
+
+###
+POST http://localhost:3000/token
+Content-Type: application/json
+
+{
+    "token":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2MjUyMDFhYzRkZTcyNWUwMGJiYjg2MSIsImlhdCI6MTcxMzcwOTUyN30.bteYmoDP6aZ_M2PxjIaTxHYV9gGoFKuctntwlxblwRY"   
+}
+
+###
+POST http://localhost:3000/group
+Content-Type: application/json
+Authorization: : eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2MjUyMDFhYzRkZTcyNWUwMGJiYjg2MSIsImlhdCI6MTcxMzcxNDc3NSwiZXhwIjoxNzEzNzE1Mzc1fQ.loicKw-nFXBDlA8BBIvjqXgQdeH7J31EK0r2eA0lZ_U
+
+{
+    
+    "groupName":"addam.mimrix@mimrix.com"
+
+}
+
+###
+GET http://localhost:3000/group/662537099cb1dc75c1a82961
+Content-Type: application/json
+Authorization: : eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2MjUyMDFhYzRkZTcyNWUwMGJiYjg2MSIsImlhdCI6MTcxMzcxOTQ4NCwiZXhwIjoxNzEzNzIwMDg0fQ.5QbMPTzTZFb6uPdBBwJgxMqNc1_CS4RdlA0cysPJ2lY
+
+
+
+###
+PATCH http://localhost:3000/group/662537099cb1dc75c1a82961
+Content-Type: application/json
+Authorization: : eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2MjUyMDFhYzRkZTcyNWUwMGJiYjg2MSIsImlhdCI6MTcxMzcxOTQ4NCwiZXhwIjoxNzEzNzIwMDg0fQ.5QbMPTzTZFb6uPdBBwJgxMqNc1_CS4RdlA0cysPJ2lY
+
+{
+    "groupName":"djohasdjufhjkasdhfujksd"
+}
+
+###
