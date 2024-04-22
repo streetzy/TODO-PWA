@@ -19,7 +19,8 @@
             return;
         }
 
-        const response = await fetch(`http://localhost:3000/login`, {
+        let objData = null;
+        const res = await fetch(`http://localhost:3000/login`, {
             headers: {
                 "Content-Type": "application/json"
             },
@@ -31,7 +32,8 @@
             })
         })
 
-        userJsonData.set(await response.json());
+        objData = await res.json();
+        userJsonData.set(objData.id);
         isLoggedIn.set(true);
     }
 
@@ -74,7 +76,7 @@
                 <div class="input"><input id="username-input" placeholder="USERNAME" type="text"></div>
             {/if}
              <div class="input"><input id="email-input" placeholder="EMAIL" type="text"></div>   
-             <div class="input"><input id="password-input" placeholder="PASSWORD" type="password"></div>
+             <div class="input"><input id="password-input" placeholder="{isLoggingIn ? "PASSWORD" : "MINIMUM 10 CHARACTERS"}" type="password"></div>
              <div class="input"><button class="buttom" on:click={() => loginHandler()}>SUBMIT</button></div>
              <div class="input"><button class="buttom" on:click={() => changeRegistrationMode()}>{isLoggingIn ? 'REGISTER' : 'LOGIN'}</button></div>
            </div>

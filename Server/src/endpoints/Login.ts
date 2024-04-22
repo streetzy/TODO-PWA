@@ -21,7 +21,7 @@ export async function login(req: express.Request, res: express.Response) {
       const accToken = generateToke(String(User._id));
       User.refreshToken = Md5.hashStr(refToken);
       User.save();
-      res.status(200).json({ refreshToken: refToken, accessToken: accToken });
+      res.status(200).json({ refreshToken: refToken, accessToken: accToken, id: User._id });
       console.log("/login 200: Jwt token send succesfully");
     } else {
       res.status(400).send("bad credentials");

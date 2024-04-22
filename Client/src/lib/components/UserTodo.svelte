@@ -2,16 +2,23 @@
     import { onMount } from "svelte";
     import { userJsonData } from "../stores/data";
 
-    let userData = null;
+    let userData;
+    let userId: string | null = null;
 
     onMount(() => {
         userJsonData.subscribe(value => {
-            userData = value;
+            userId = value;
         })
+        getAllUserData();
     })
-    console.log(userData);
-    async function getUserData(groupId: string) {
-
+    async function getAllUserData() {
+        const response = await fetch(`http://localhost:3000/user/${userId}`, {
+            headers: {
+                "Content-Type": "application/json"
+            },
+            mode: "cors",
+            method: "GET"
+        })
     }
 
     async function removeTodo(todoId: string) {
@@ -30,6 +37,14 @@
 </script>
     
 <main>
+    <form>
+        <h1>ENTER GROUP NAME</h1>
+        <p></p>
+        <label for="groupName">Group name:</label>
+        <input id="groupName" type="text">
+    </form>
+
+
     <nav>
         <button class="calendar-view"><h1 class="button-text">CALENDAR VIEW</h1></button>
         <button class="group-view"><h1 class="button-text">GROUP VIEW</h1></button>
