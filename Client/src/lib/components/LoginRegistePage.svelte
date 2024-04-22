@@ -33,7 +33,7 @@
         })
 
         objData = await res.json();
-        userJsonData.set(objData.id);
+        userJsonData.set(objData);
         isLoggedIn.set(true);
     }
 

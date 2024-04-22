@@ -16,7 +16,7 @@ export async function AuthMidleware(req: express.Request, res: express.Response,
     try{
         const authHeader = req.headers['authorization']
         
-    const token = authHeader && authHeader.split(' ')[1]
+    const token = authHeader ? authHeader.split(' ')[1] : null;
     console.log(authHeader)
     if (token != null){
         jwt.verify(token, String(process.env.ACCESS_TOKEN),(err, id)=>{

@@ -2,24 +2,33 @@
     import { onMount } from "svelte";
     import { userJsonData } from "../stores/data";
 
-    let userData;
-    let userId: string | null = null;
+
+    let groupPopUpFlag: boolean = false;
+    let userTokenId: {userId: string, accessToken: string, refreshToken: string} | null = null;
+    let groupId: string | null = null;
+
+    let refreshToken: string | undefined;
 
     onMount(() => {
         userJsonData.subscribe(value => {
-            userId = value;
+            userTokenId = value;
         })
-        getAllUserData();
+        refreshToken = userTokenId?.refreshToken;
+
+        console.log(refreshToken);
     })
-    async function getAllUserData() {
-        const response = await fetch(`http://localhost:3000/user/${userId}`, {
-            headers: {
-                "Content-Type": "application/json"
-            },
-            mode: "cors",
-            method: "GET"
-        })
-    }
+
+
+    // async function getAllUserData() { // not used yet
+    //     const response = await fetch(`http://localhost:3000/user/${....}`, {
+    //         headers: {
+    //             "Authorization": `${refreshToken}`,
+    //             "Content-Type": "application/json"
+    //         },
+    //         mode: "cors",
+    //         method: "GET"
+    //     })
+    // }
 
     async function removeTodo(todoId: string) {
 
@@ -33,24 +42,48 @@
 
     }  
 
+    async function addGroup() { // not used yet
+        const response = await fetch(`http://localhost:3000/group`, {
+            headers: {
+                "Authorization": `${refreshToken}`,
+                "Content-Type": "application/json"
+            },
+            mode: "cors",
+            method: "POST",
+            body: JSON.stringify({
+                "groupName": (document.getElementById("groupName") as HTMLInputElement).value
+            })
+        })
+        showGroupPopUp();
+
+        groupId = await response.json();
+        console.log(groupId);
+        
+    }
+
+    function showGroupPopUp() {
+        groupPopUpFlag = !groupPopUpFlag;
+    }
+
 
 </script>
     
 <main>
-    <form>
-        <h1>ENTER GROUP NAME</h1>
-        <p></p>
-        <label for="groupName">Group name:</label>
-        <input id="groupName" type="text">
-    </form>
-
-
+    {#if groupPopUpFlag}
+        <div class="groupDetails">
+            <h1 class="groupHeader">ENTER GROUP NAME</h1>
+            <div class="groupInput">
+                <input class="inputText" id="groupName" type="text">
+                <button class="inputButton" on:click={() => addGroup()}>SUBMIT</button>
+            </div>
+        </div>
+    {/if}
     <nav>
         <button class="calendar-view"><h1 class="button-text">CALENDAR VIEW</h1></button>
         <button class="group-view"><h1 class="button-text">GROUP VIEW</h1></button>
         <div class="dropdown">
             <h1 class="username">USERNAME</h1>
-            <button class="sign-out"></button>
+            <button class="sign-out">SIGN OUT</button>
         </div>
     </nav>
 
@@ -125,6 +158,45 @@
         background-color: #393939;
     }
 
+    .groupHeader {
+        font-size: 3rem;
+        height: 40%;
+        width: 100%;
+        text-align: center;
+        margin: 0;
+    }
+
+    .groupInput {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding-bottom: 15rem;
+        height: 60%
+    }
+
+    .groupInput input {
+        width: 30vw;
+        height: 10%;
+    }
+
+    .groupInput button {
+        width: 30.5vw;
+        height: 11.25%;
+        font-size: 1.5rem;
+    }
+
+    .groupDetails {
+        display: flex;
+        flex-direction: column;
+        position: absolute;
+        justify-content: center;
+        align-items: center;
+        background-color: #393939;
+        height: 100vh;
+        width: 100vw;
+    }
+
     nav {
         height: 12.5vh;
         background-color: #4E4E4E;
@@ -152,7 +224,6 @@
     .username {
         line-height: 0;
         font-size: 3rem;
-        position: absolute;
     }
 
     .sign-out {
@@ -174,6 +245,10 @@
         background-color: #4E4E4E;
         border-color: #4E4E4E;
         border-style: solid;
+    }
+
+    .dropdown:hover .username {
+        position: absolute;
     }
 
     .content {
