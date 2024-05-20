@@ -29,7 +29,7 @@ export async function login(req: express.Request, res: express.Response) {
     }catch(error){
         console.log("/login 500: Try catch exeption")
         console.log(error)
-        res.status(500).send("gg")
+        res.status(500).send("server error")
     }
 };
 

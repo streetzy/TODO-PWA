@@ -20,7 +20,7 @@ export async function register (req: express.Request, res: express.Response) {
         if (error != undefined){
             console.log(error)
             console.log("/register 400: Invalid data")
-            return res.status(400).send("gg")
+            return res.status(400).send("Invalid data")
         
         }else {
             
@@ -29,19 +29,19 @@ export async function register (req: express.Request, res: express.Response) {
      
                 if (User){
                     console.log("/register 400: Email already used")
-                    return res.status(400).send("gg")
+                    return res.status(400).send("Email already used")
                      
                 }
                 NewUser.email = value.email
                 NewUser.password = Md5.hashStr(value.password)
                 await NewUser.save()
                 console.log("/register 201: New user added")
-                res.status(201).send("gg")
+                res.status(201).send("new user added")
                 
         }
     }catch{
         console.log("/register 500: Try catch exeption")
-        res.status(500).send("gg")
+        res.status(500).send("Internal server error")
     }
 
 };

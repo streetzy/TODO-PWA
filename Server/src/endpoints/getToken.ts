@@ -23,7 +23,7 @@ export async function getToken(req: express.Request, res: express.Response) {
             
                 
             }else{
-                res.status(401).send("gg")
+                res.status(401).send("Invalid ref token")
                     console.log("Invalid ref token")
                     return
             }

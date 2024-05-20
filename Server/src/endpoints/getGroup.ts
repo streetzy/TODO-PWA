@@ -14,8 +14,6 @@ export async function getGroup(req: express.Request, res: express.Response) {
     try{
         let Group = await group.findById(req.params.groupId).exec();
         
-            
-        
             if(Group){
                 var sent:boolean = false
                 for (let index = 0; index < Group.members.length; index++) {
@@ -31,7 +29,7 @@ export async function getGroup(req: express.Request, res: express.Response) {
                     }
                 }
                 if(!sent){
-                    res.status(401).send("gg unlucko")
+                    res.status(401).send("not a member of this group")
                     console.log("getGroup :401  not a member of this group")
                 }
 

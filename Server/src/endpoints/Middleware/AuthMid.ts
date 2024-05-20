@@ -23,7 +23,7 @@ export async function AuthMidleware(req: express.Request, res: express.Response,
             if(err){
 
 
-             res.status(401).send("gg")
+             res.status(401).send("Invalid token")
              console.log("Invalid acc token")
               return              
 
@@ -41,11 +41,11 @@ export async function AuthMidleware(req: express.Request, res: express.Response,
         })
     }
     else{
-        res.status(401).send("gg")
+        res.status(401).send("Unauthorized")
         console.log("AuthMidleware 401: no token found")
     }
     }catch{
-        res.status(500).send("gg")
+        res.status(500).send("Internal server error")
         console.log("500: AuthMidleware try catch error")
     }
 
