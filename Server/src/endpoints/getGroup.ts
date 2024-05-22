@@ -1,14 +1,14 @@
-import mongoose from 'mongoose'
-import { user } from '../models/modules.js';
-import { todo } from '../models/modules.js';
-import express from 'express';
-import Joi from 'joi';
-import {Md5} from 'ts-md5';
-import jwt from 'jsonwebtoken'
-import { error,  time } from 'console';
-import { group } from '../models/modules.js';
-import dotenv from 'dotenv'
-import { JsxFlags } from 'typescript';
+import mongoose from "mongoose";
+import { user } from "../models/modules.js";
+import { todo } from "../models/modules.js";
+import express from "express";
+import Joi from "joi";
+import { Md5 } from "ts-md5";
+import jwt from "jsonwebtoken";
+import { error, time } from "console";
+import { group } from "../models/modules.js";
+import dotenv from "dotenv";
+import { JsxFlags } from "typescript";
 
 export async function getGroup(req: express.Request, res: express.Response) {
     try{

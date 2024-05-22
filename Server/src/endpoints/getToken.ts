@@ -1,8 +1,8 @@
-import  express  from "express"
-import jwt from 'jsonwebtoken'
-import dotenv from 'dotenv'
-import { user } from '../models/modules.js';
-import {Md5} from 'ts-md5';
+import express from "express";
+import jwt from "jsonwebtoken";
+import dotenv from "dotenv";
+import { user } from "../models/modules.js";
+import { Md5 } from "ts-md5";
 dotenv.config();
 import { generateToke } from "./Login.js";
 export async function getToken(req: express.Request, res: express.Response) {
@@ -28,9 +28,10 @@ export async function getToken(req: express.Request, res: express.Response) {
                     return
             }
 
-            
-            res.status(401).send("user not found")
-            console.log("user not found")
-        }
-    })
+        //proc je tady kod kdyz je hned nad tim return :skull:
+        res.status(401).send("user not found");
+        console.log("user not found");
+      }
+    }
+  );
 }

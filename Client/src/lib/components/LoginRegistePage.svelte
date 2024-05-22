@@ -1,12 +1,54 @@
 <script lang="ts">
-	let text:boolean = false;
+    import { isLoggedIn } from '../stores/auth.js'
+    import { userJsonData } from '../stores/data.js';
+
+    async function loginHandler() {
+        if(!isLoggingIn) {
+            await fetch(`http://localhost:3000/user`, {
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                mode: "cors",
+                method: "POST",
+                body: JSON.stringify({
+                    "username": (document.getElementById("username-input") as HTMLInputElement).value,
+                    "email": (document.getElementById("email-input") as HTMLInputElement).value,
+                    "password": (document.getElementById("password-input") as HTMLInputElement).value
+                })
+            })
+            return;
+        }
+
+        let objData = null;
+        const res = await fetch(`http://localhost:3000/login`, {
+            headers: {
+                "Content-Type": "application/json"
+            },
+            mode: "cors",
+            method: "POST",
+            body: JSON.stringify({
+                "email": (document.getElementById("email-input") as HTMLInputElement).value,
+                "password": (document.getElementById("password-input") as HTMLInputElement).value
+            })
+        })
+
+        objData = await res.json();
+        userJsonData.set(objData);
+        isLoggedIn.set(true);
+    }
+
+    function changeRegistrationMode() { 
+        isLoggingIn = !isLoggingIn;
+    }
+
+	let isLoggingIn:boolean = false;
 
 </script>
 <main>
     
         <div class="top">
             <div class="logo">
-                <a href="#"><img class="img"  src="\src\logo-placeholder-image.png" alt=""></a>
+                <a href="https://github.com/"><img class="img"  src="\src\logo-placeholder-image.png" alt=""></a>
             </div>
             <div  class="links">
                 <div class = "link">
@@ -29,10 +71,14 @@
         </div>
         <div class="body1">
            <div class="gg">
-            <div class="input"><h1>{text == false ? 'LOGIN' : 'REGISTER'}</h1></div>
-             <div class="input"><input placeholder="EMAIL"  type="text"></div>   
-             <div class="input"><input  placeholder="PASSWORD" type="password"></div>
-             <div class="input"><button class="buttom">SUBMIT</button></div>
+            <div class="input"><h1>{isLoggingIn ? 'LOGIN' : 'REGISTER'}</h1></div>
+            {#if !isLoggingIn}
+                <div class="input"><input id="username-input" placeholder="USERNAME" type="text"></div>
+            {/if}
+             <div class="input"><input id="email-input" placeholder="EMAIL" type="text"></div>   
+             <div class="input"><input id="password-input" placeholder="{isLoggingIn ? "PASSWORD" : "MINIMUM 10 CHARACTERS"}" type="password"></div>
+             <div class="input"><button class="buttom" on:click={() => loginHandler()}>SUBMIT</button></div>
+             <div class="input"><button class="buttom" on:click={() => changeRegistrationMode()}>{isLoggingIn ? 'REGISTER' : 'LOGIN'}</button></div>
            </div>
         </div>
     
