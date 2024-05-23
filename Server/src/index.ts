@@ -15,6 +15,8 @@ import { logOut } from "./endpoints/logOut.js";
 import { addGroup } from "./endpoints/addGroup.js";
 import { getGroup } from "./endpoints/getGroup.js";
 import { patchGroup } from "./endpoints/patchGroup.js";
+import { patchUser } from "./endpoints/patchUser.js";
+import { getUser } from "./endpoints/getUser.js";
 
 const app = express();
 const PORT = 3000;
@@ -46,9 +48,14 @@ app.use(AuthRouter)
 AuthRouter.use((req,res,next)=>AuthMidleware(req,res,next))
 
 AuthRouter.delete('/login',(req,res)=>logOut(req,res))
+AuthRouter.patch('/user',(req,res)=>patchUser(req,res))
+AuthRouter.get('/user',(req,res)=>getUser(req,res))
+
 AuthRouter.post('/group',(req,res)=>addGroup(req,res))
 AuthRouter.get('/group/:groupId',(req,res)=>getGroup(req,res))
 AuthRouter.patch('/group/:groupId',(req,res)=>patchGroup(req,res))
+
+
 AuthRouter.post("/todo", (req, res) => addTodo(req, res));
 AuthRouter.delete("/todo/:todoId", (req, res) => deleteTodo(req, res));
 AuthRouter.get("/todo/:todoId", (req, res) => getTodo(req, res));

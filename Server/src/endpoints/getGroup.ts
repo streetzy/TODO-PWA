@@ -23,7 +23,7 @@ export async function getGroup(req: express.Request, res: express.Response) {
                     if(element._id?.toHexString() == req.body.id) {
                         
                         console.log("getGroup :200 group sent")
-                        res.json(Group)
+                        res.status(200).json(Group)
                         sent =true
                         return
                     }
