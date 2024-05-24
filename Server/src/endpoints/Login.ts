@@ -10,7 +10,6 @@ import dotenv from "dotenv";
 dotenv.config();
 
 export async function login(req: express.Request, res: express.Response) {
-
   try {
     console.log(req.body);
     let User = await user.findOne({ email: req.body.email }).exec();
@@ -27,7 +26,6 @@ export async function login(req: express.Request, res: express.Response) {
     } else {
       res.status(400).send("bad credentials");
       console.log("email or password not correct");
-
     }
   } catch (error) {
     console.log("/login 500: Try catch exeption");
