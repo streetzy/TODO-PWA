@@ -1,34 +1,55 @@
 <script lang="ts">
+    
     import { onMount } from "svelte";
     import { userJsonData } from "../stores/data";
+    import { inCalendarView } from "../stores/buttons";
 
 
+    const URL: string = "http://localhost:3000/";
     let groupPopUpFlag: boolean = false;
     let userTokenId: {userId: string, accessToken: string, refreshToken: string} | null = null;
     let groupId: string | null = null;
 
-    let refreshToken: string | undefined;
+    let todoItems : {todoName: string, todoStatus: string, todoContent: string, authorId: string, deadline: string | null, group: string | null }[]= [];
+
+    let accessToken: string | undefined;
+
+    let currentGroupInfo: {} | null = null;
 
     onMount(() => {
         userJsonData.subscribe(value => {
             userTokenId = value;
         })
-        refreshToken = userTokenId?.refreshToken;
+        accessToken = userTokenId?.accessToken;
 
-        console.log(refreshToken);
+        getTodos()
     })
 
+    function swapToCalendar() {
+        inCalendarView.set(true);
+        console.log("BUTTON PRESSED")
+    }
 
-    // async function getAllUserData() { // not used yet
-    //     const response = await fetch(`http://localhost:3000/user/${....}`, {
-    //         headers: {
-    //             "Authorization": `${refreshToken}`,
-    //             "Content-Type": "application/json"
-    //         },
-    //         mode: "cors",
-    //         method: "GET"
-    //     })
-    // }
+    async function getTodos() {
+        //todoItems = currentGroupInfo.todos;
+    }
+
+    async function getGroupInfo(groupId: string) {
+        const response = await fetch(URL + "group/" + groupId, {
+            headers: {
+                "Authorization": `${accessToken}`,
+                "Content-Type": "application/json"
+            },
+            mode: "cors",
+            method: "GET",
+        })
+
+        currentGroupInfo = response.json();
+    }
+
+    async function addTodo() {
+
+    }
 
     async function removeTodo(todoId: string) {
 
@@ -43,9 +64,9 @@
     }  
 
     async function addGroup() { // not used yet
-        const response = await fetch(`http://localhost:3000/group`, {
+        const response = await fetch(URL + "group", {
             headers: {
-                "Authorization": `${refreshToken}`,
+                "Authorization": `${accessToken}`,
                 "Content-Type": "application/json"
             },
             mode: "cors",
@@ -79,8 +100,8 @@
         </div>
     {/if}
     <nav>
-        <button class="calendar-view"><h1 class="button-text">CALENDAR VIEW</h1></button>
-        <button class="group-view"><h1 class="button-text">GROUP VIEW</h1></button>
+        <button class="calendar-view" on:click={() => swapToCalendar()}><h1 class="button-text">CALENDAR VIEW</h1></button>
+        <button class="group-view" on:click={() => showGroupPopUp()}><h1 class="button-text">GROUP VIEW</h1></button>
         <div class="dropdown">
             <h1 class="username">USERNAME</h1>
             <button class="sign-out">SIGN OUT</button>
@@ -91,10 +112,13 @@
         <div class="todo to-do-tab">
             <div class="header">
                 <h1>TO-DO</h1>
+                <button class="addTodoButton">+</button>
             </div>
 
             <div class="todo-items">
                 <!--Basic todo item template, to be replaced-->
+                {#each todoItems as todo}
+                {#if todo.todoStatus == "todo"}
                 <div class="todo-item">
                     <div class="todo-item-name">
                         <h3>TODOITEM</h3>
@@ -105,6 +129,8 @@
                         <button on:click={() => removeTodo("tempString")} class="remove"></button>
                     </div>
                 </div>
+                {/if}
+                {/each}
             </div>
             
         </div>
@@ -261,6 +287,7 @@
     }
 
     .todo {
+        position: relative;
         display: flex;
         flex-direction: column;
         height: 95%;
@@ -268,6 +295,16 @@
         justify-content: center;
         align-items: center;
         border-radius: 2.5rem;
+    }
+
+    .addTodoButton { 
+        position: absolute;
+        left: 80%;
+        width: 3rem;
+        height: 3rem;
+        border-radius: 100%;
+        border-style: solid;
+        font-size: 2rem;
     }
 
     .to-do-tab {

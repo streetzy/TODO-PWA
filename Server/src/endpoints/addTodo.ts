@@ -1,9 +1,7 @@
 import { Request, Response } from "express";
-import { todo } from "../models/modules.js";
+import { todo, user } from "../models/modules.js";
 
 export async function addTodo(req: Request, res: Response) {
-  console.log(req.body);
-
   const newTodo = new todo({
     todoName: req.body.todoName,
     status: req.body.todoStatus,
@@ -13,6 +11,8 @@ export async function addTodo(req: Request, res: Response) {
     group: req.body.isGroup ? req.body.groupId : null,
   });
 
-  await newTodo.save();
+  await newTodo.save().catch((error) => {
+    res.status(500).send("INTERNAL SERVER ERROR");
+  });
   res.status(200).send("OK");
 }

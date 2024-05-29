@@ -16,7 +16,7 @@ export async function AuthMidleware(req: express.Request, res: express.Response,
     try{
         const authHeader = req.headers['authorization']
         
-    const token = authHeader ? authHeader.split(' ')[1] : null;
+    const token = authHeader ? authHeader.split(' ')[0] : null;
     console.log(authHeader)
     if (token != null){
         jwt.verify(token, String(process.env.ACCESS_TOKEN),(err, id)=>{
@@ -31,10 +31,8 @@ export async function AuthMidleware(req: express.Request, res: express.Response,
             
             
             if(id){
-                req.body.id = id
-                let gg =  req.body.id.id
-                req.body.id = gg
-                console.log("authmidleware succesfull")
+                req.body.id = (id as any).id
+                console.log("authmiddleware successful")
                 next()
 
             }
@@ -42,11 +40,11 @@ export async function AuthMidleware(req: express.Request, res: express.Response,
     }
     else{
         res.status(401).send("gg")
-        console.log("AuthMidleware 401: no token found")
+        console.log("AuthMiddleware 401: no token found")
     }
     }catch{
         res.status(500).send("gg")
-        console.log("500: AuthMidleware try catch error")
+        console.log("500: AuthMiddleware try catch error")
     }
 
 }
