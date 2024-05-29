@@ -256,6 +256,8 @@
         height: 100%;
         width: 100%;
         display: none;
+        padding-top: 6rem;
+        font-size: 2rem;
     }
 
     .dropdown {
