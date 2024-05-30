@@ -2,9 +2,11 @@
     import { isLoggedIn } from '../stores/auth.js'
     import { userJsonData } from '../stores/data.js';
 
+    const URL = "http://localhost:3000";
+
     async function loginHandler() {
         if(!isLoggingIn) {
-            await fetch(`http://localhost:3000/user`, {
+            await fetch(URL + "/user", {
                 headers: {
                     "Content-Type": "application/json"
                 },

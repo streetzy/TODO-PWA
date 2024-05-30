@@ -1,9 +1,11 @@
 <script lang="ts">
   import { onMount } from "svelte";
+  import { viewedGroup, inCalendarView } from "../stores/data";
 
     let days = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"]
     let months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October","November", "December"]
 
+    let displayedGroup: {} | null= null;
 
     let currentDate = new Date();
     let currentYear = currentDate.getFullYear();
@@ -13,11 +15,17 @@
     let showDayInfoWindow = false;
 
     let calendarDays : (null|number)[][] = [];
+
+
     async function showDayInfo(day: number) {
         const dateForData = `${day}-${months.findIndex(month => month == currentMonth) + 1}-${currentYear}`; // (all as numbers) DAY-MONTH-YEAR
         displayedDate = `${day}. ${currentMonth} ${currentYear}`;
 
         toggleDayInfoWindow();
+    }
+
+    function toggleCalendarView() {
+        inCalendarView.set(false);
     }
 
     function toggleDayInfoWindow() {
@@ -85,12 +93,16 @@
 
     onMount(() => {
         daysInMonth(months.findIndex(month => month == currentMonth));
+
+        viewedGroup.subscribe(() => {
+
+        })
     });
 </script>
 
 <main>
     <nav>
-        <button class="return"><h1 class="button-text">RETURN</h1></button>
+        <button class="return" on:click={() => toggleCalendarView()}><h1 class="button-text">RETURN</h1></button>
         <div class="date-content">
             <button on:click={()=> {changeMonth(true); daysInMonth(months.findIndex(month => month == currentMonth));}}>&lt</button>
             <div class="date-header-container">

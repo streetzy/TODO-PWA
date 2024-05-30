@@ -4,7 +4,7 @@
     import LoginRegistePage from "./lib/components/LoginRegistePage.svelte";
     import Calendar from "./lib/components/Calendar.svelte";
     import { isLoggedIn } from "./lib/stores/auth.js";
-    import { inCalendarView } from "./lib/stores/buttons.js";
+    import { inCalendarView } from "./lib/stores/data.js";
     
     let isUserAuthenticated = false;
     let isInCalendarView = false;
