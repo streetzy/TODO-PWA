@@ -29,7 +29,7 @@ export async function getGroup(req: express.Request, res: express.Response) {
                     }
                 }
                 if(!sent){
-                    res.status(401).send("not a member of this group")
+                    res.status(401).json(Group.groupName)
                     console.log("getGroup :401  not a member of this group")
                 }
 
