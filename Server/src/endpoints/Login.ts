@@ -29,14 +29,13 @@ export async function login(req: express.Request, res: express.Response) {
     }
   } catch (error) {
     console.log("/login 500: Try catch exeption");
-    console.log(error);
     res.status(500).send("gg");
   }
 }
 
 export function generateToke(id: string): string {
   const accToken = jwt.sign({ id: id }, String(process.env.ACCESS_TOKEN), {
-    expiresIn: "10m",
+    expiresIn: "30m",
   });
   return accToken;
 }

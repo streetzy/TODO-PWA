@@ -2,7 +2,8 @@ POST http://localhost:3000/user
 Content-Type: application/json
 
 {
-    "email":"addam.mimrix@miimrix.com",
+    "username":"asdasdasd",
+    "email":"adddam.mimrix@miifgfmrix.com",
     "password":"asdasdojsdfgjdfgnjl"
 }
 
@@ -11,7 +12,7 @@ POST http://localhost:3000/login
 Content-Type: application/json
 
 {
-    "email":"addam.mimrix@miimrix.com",
+    "email":"adddam.mimrix@miifgfmrix.com",
     "password":"asdasdojsdfgjdfgnjl"
 }
 

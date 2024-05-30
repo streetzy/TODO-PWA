@@ -15,8 +15,8 @@ export async function acceptInvite(req: express.Request, res: express.Response) 
         if (Invite && User && User._id.id == Invite.invited) {
             let Group = await group.findById(Invite.group)
             if (Group) {
-                Group.members.push(User._id.toHexString)
-                User.groups.push(Group._id.toHexString)
+                Group.members.push(User._id)
+                User.groups.push(Group._id)
                 Group.save()
                 User.save()
                 res.status(200).send("invite accepted")

@@ -19,6 +19,8 @@ import { patchUser } from "./endpoints/patchUser.js";
 import { getUser } from "./endpoints/getUser.js";
 import { postNewInvite } from "./endpoints/postNewInvite.js";
 import { acceptInvite } from "./endpoints/postAcceptInvite.js";
+import { cancelInvite } from "./endpoints/CancelInvite.js";
+import { rejectInvite } from "./endpoints/rejectInvite.js";
 
 const app = express();
 const PORT = 3000;
@@ -59,6 +61,8 @@ AuthRouter.patch('/group/:groupId',(req,res)=>patchGroup(req,res))
 
 AuthRouter.post("/group/:groupId/invite",(req,res)=>postNewInvite(req,res))
 AuthRouter.post('/user/invite/:inviteId',(req,res)=>acceptInvite(req,res))
+AuthRouter.post("/group/:groupId/invite/:inviteId",(req,res)=>cancelInvite(req,res))
+AuthRouter.post('/user/:userId/invite/:inviteId',(req,res)=>rejectInvite(req,res))
 
 AuthRouter.post("/todo", (req, res) => addTodo(req, res));
 AuthRouter.delete("/todo/:todoId", (req, res) => deleteTodo(req, res));
