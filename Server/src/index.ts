@@ -15,6 +15,7 @@ import { logOut } from "./endpoints/logOut.js";
 import { addGroup } from "./endpoints/addGroup.js";
 import { getGroup } from "./endpoints/getGroup.js";
 import { patchGroup } from "./endpoints/patchGroup.js";
+import { getUser } from "./endpoints/getUser.js"
 
 const app = express();
 const PORT = 3000;
@@ -43,6 +44,7 @@ app.post('/token',(req,res)=>getToken(req,res))
 app.delete('/login',(req,res)=>logOut(req,res))
 app.use(AuthRouter)
 AuthRouter.use((req,res,next)=>AuthMidleware(req,res,next))
+AuthRouter.get('/user/:userId', (req, res) => getUser(req, res))
 AuthRouter.post('/group',(req,res)=>addGroup(req,res))
 AuthRouter.get('/group/:groupId',(req,res)=>getGroup(req,res))
 AuthRouter.patch('/group/:groupId',(req,res)=>patchGroup(req,res))
@@ -59,6 +61,7 @@ app.listen(PORT, () => {
 // DELETE /login/ => deletes refresh token from db
 
 // GET /user/:userId
+// GET /user/:userId/group
 // /register => POST /user
 // PATCH /user/:userId
 

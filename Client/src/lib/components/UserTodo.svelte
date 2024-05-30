@@ -8,7 +8,10 @@
     const URL: string = "http://localhost:3000/";
     let groupPopUpFlag: boolean = false;
     let userTokenId: {userId: string, accessToken: string, refreshToken: string} | null = null;
-    let groupId: string | null = null;
+    let userId: string | undefined;
+    let groupId: string | undefined;
+    let currentUserInfo = null;
+    let userGroups = null;
 
     let todoItems : {todoName: string, todoStatus: string, todoContent: string, authorId: string, deadline: string | null, group: string | null }[]= [];
 
@@ -20,7 +23,9 @@
         userJsonData.subscribe(value => {
             userTokenId = value;
         })
+
         accessToken = userTokenId?.accessToken;
+        userId = userTokenId?.userId;
 
         getTodos()
     })
@@ -31,11 +36,12 @@
     }
 
     async function getTodos() {
-        //todoItems = currentGroupInfo.todos;
     }
 
-    async function getGroupInfo(groupId: string) {
-        const response = await fetch(URL + "group/" + groupId, {
+
+
+    async function getUserInfo(userId: string) {
+        const response = await fetch(URL + "user/" + userId, {
             headers: {
                 "Authorization": `${accessToken}`,
                 "Content-Type": "application/json"
@@ -44,7 +50,11 @@
             method: "GET",
         })
 
-        currentGroupInfo = response.json();
+        currentUserInfo = await response.json();
+    }
+
+    async function findUserGroups() {
+        
     }
 
     async function addTodo() {

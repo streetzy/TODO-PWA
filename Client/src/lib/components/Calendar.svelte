@@ -4,7 +4,6 @@
     let days = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"]
     let months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October","November", "December"]
 
-    let todos = [];
 
     let currentDate = new Date();
     let currentYear = currentDate.getFullYear();
