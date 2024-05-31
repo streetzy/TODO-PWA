@@ -51,6 +51,19 @@ Api přenáší data pouze ve formátu JSON
             "password":"Uživatelovo heslo"
         }
         Pokud hodnoty odpovídají existujícímu uživateli, vrátí access a refresh token. Access token platí 30 minut. Refresh token není časově omezen.
+    **Odhlášení**
+        DELETE http://localhost:3000/login
+        Po zaslání bude smazán userův refresh token z databáze a pro další práci na stránce po vypršení access tokenu bude nutné se znovu přihlásit.
+    **Nový token**
+        POST http://localhost:3000/token
+        Content-Type: application/json
+        {
+            "Token":"Uživatelův refresh token"   
+        }
+        Po zaslání refresh token dostane user zpět nový access token v tomto formátu.
+        {
+            "accessToken":"Nový user access token"   
+        }
     **Auth middleware**
         Každý následující request pořebuje pro správné fungování platný access token. 
         Access token získáte při loginu, nebo po zaslání refresh tokenu v tomto requestu.
@@ -160,7 +173,7 @@ Api přenáší data pouze ve formátu JSON
                 groupName: jméno group kam je user pozván,
             }
     **Získání invitů group**
-        GET  http://localhost:3000//group/:groupId/invite
+        GET  http://localhost:3000/group/:groupId/invite
         Content-Type: application/json
         Authorization: : Uživatelův access token
         Vrací aray všech invitů group s tímto group id. User, který request posílá musí být member tété group
@@ -170,4 +183,45 @@ Api přenáší data pouze ve formátu JSON
                 UserName: Jméno pozvaného usera,
             }
     **Nové todo**
+        POST http://localhost:3000/todo
+        Content-Type: application/json
+        Authorization: : Uživatelův access token
+            Přijímá data v tomto formátu. Uživatel musí být členem group se poslaným group id.
+            {
+                groupId: id group,
+                todoName: Jméno todo,
+                todoContent: obsah todo,
+                status: status daného todo
+            }
+    **smazání todo**
+        DELETE http://localhost:3000/todo/:todoId
+        Content-Type: application/json
+        Authorization: : Uživatelův access token
+            User musí být členem group ve, které se todo nachází. Pokud je tak bude smazáno todo se zadaným todoId.
+    **získání dat todo**
+        GET http://localhost:3000/todo/:todoId
+        Content-Type: application/json
+        Authorization: : Uživatelův access token
+            Pokud je user členem group ve, které je todo s daným todoId tak získá všechna dat todo. Ve formáru:
+                todo{
+                    todoName: jméno todo,
+                    status:  status todo,
+                    todoContent: obsah tohoto todo,
+                    authorId: Object Id dokumentu user který toto todo vytvořil,
+                    deadline: datum deadlinu,
+                    group: ObjectId dokumentu group ve ktrém je toto todo,
+                }
+    **upravení todo**
+        PATCH http://localhost:3000/todo/:todoId
+        Content-Type: application/json
+        Authorization: : Uživatelův access token
+        Pokud je user členem group ve, které je todo s daným todoId tak můžeupravit jeho jméno a obsah.
+        Pro změnu obsahu odesílá data ve formátu :
+            {
+                todoName = Nové jméno todo;
+                todoContent = Nový obsah todo;
+            }
 
+         
+            
+            

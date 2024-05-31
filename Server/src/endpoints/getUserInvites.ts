@@ -15,7 +15,6 @@ export async function getUserInvites(req: express.Request, res: express.Response
                 let NameId = {
                     inviteId: Invite?._id.id,
                     groupName: Invite?.group.groupName,
-
                 }
                 InviteList.push(NameId)
             }

@@ -67,7 +67,6 @@ AuthRouter.delete("/group/:groupId/invite/:inviteId",(req,res)=>cancelInvite(req
 AuthRouter.delete('/user/invite/:inviteId',(req,res)=>rejectInvite(req,res))
 AuthRouter.get('/user/invite',(req,res)=>getUserInvites(req,res))
 AuthRouter.get('/group/:groupId/invite',(req,res)=>getGroupInvites(req,res))
-
 AuthRouter.post("/todo", (req, res) => addTodo(req, res));
 AuthRouter.delete("/todo/:todoId", (req, res) => deleteTodo(req, res));
 AuthRouter.get("/todo/:todoId", (req, res) => getTodo(req, res));
