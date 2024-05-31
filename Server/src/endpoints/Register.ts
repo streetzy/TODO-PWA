@@ -20,11 +20,13 @@ export async function register(req: express.Request, res: express.Response) {
 
     if (error != undefined) {
       console.log(error);
-      return res.status(400).send("Invalid data error");
+      console.log("/register 400: Invalid data");
+      return res.status(400).send("Invalid data");
     } else {
       const User = await user.findOne({ email: value.email });
 
       if (User) {
+        console.log("/register 400: Email already used");
         return res.status(400).send("Email already used");
       }
       NewUser.userName = value.username;
@@ -34,11 +36,13 @@ export async function register(req: express.Request, res: express.Response) {
 
       NewUserGroup.groupName = value.username;
       NewUserGroup.owner = NewUser.id;
-
+      NewUserGroup.members.push(NewUser.id);
+      
       await NewUser.save();
+      console.log("/register 201: New user added");
       await NewUserGroup.save();
       res.status(201).send("New user added");
-    } //
+    }
   } catch {
     res.status(500).send("Internal server error");
   }

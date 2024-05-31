@@ -2,8 +2,9 @@ POST http://localhost:3000/user
 Content-Type: application/json
 
 {
-    "email":"addam.mimrix@miimrix.com",
-    "password":"asdasdojsdfgjdfgnjl"
+    "username":"testesttest",
+    "email":"testest@testest.com",
+    "password":"testesttest"
 }
 
 ###
@@ -11,8 +12,8 @@ POST http://localhost:3000/login
 Content-Type: application/json
 
 {
-    "email":"addam.mimrix@miimrix.com",
-    "password":"asdasdojsdfgjdfgnjl"
+    "email":"testest@testest.com",
+    "password":"testesttest"
 }
 
 ###
@@ -26,7 +27,7 @@ Content-Type: application/json
 ###
 POST http://localhost:3000/group
 Content-Type: application/json
-Authorization: : eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2MjUyMDFhYzRkZTcyNWUwMGJiYjg2MSIsImlhdCI6MTcxMzcxNDc3NSwiZXhwIjoxNzEzNzE1Mzc1fQ.loicKw-nFXBDlA8BBIvjqXgQdeH7J31EK0r2eA0lZ_U
+Authorization: : eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2NTljYWI0NjhiMTk5YzcyZTlhNDAxOSIsImlhdCI6MTcxNzE2MDY0NywiZXhwIjoxNzE3MTYyNDQ3fQ.6sunCAUsETCuG4J49Mj_jTQ99iW8fXrTdaCW1oh-I_A
 
 {
     
@@ -44,10 +45,25 @@ Authorization: : eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2MjUyMDFhYzRkZT
 ###
 PATCH http://localhost:3000/group/662537099cb1dc75c1a82961
 Content-Type: application/json
-Authorization: : eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2MjUyMDFhYzRkZTcyNWUwMGJiYjg2MSIsImlhdCI6MTcxMzcxOTQ4NCwiZXhwIjoxNzEzNzIwMDg0fQ.5QbMPTzTZFb6uPdBBwJgxMqNc1_CS4RdlA0cysPJ2lY
+Authorization: : eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2MjUyMDFhYzRkZTcyNWUwMGJiYjg2MSIsImlhdCI6MTcxNzA5NDA2NSwiZXhwIjoxNzE3MDk0NjY1fQ.S6PpnHygZ0wWUTNkJBXO96ydgjeqnBx5FHX9rvd6P2Y
 
 {
-    "groupName":"djohasdjufhjkasdhfujksd"
+    "groupName":"fdgdfgdfgdfgg"
 }
+
+###
+POST http://localhost:3000/group/6659cad668b199c72e9a401e/invite
+Content-Type: application/json
+Authorization: : eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2NTljYWI0NjhiMTk5YzcyZTlhNDAxOSIsImlhdCI6MTcxNzE2MDY0NywiZXhwIjoxNzE3MTYyNDQ3fQ.6sunCAUsETCuG4J49Mj_jTQ99iW8fXrTdaCW1oh-I_A
+
+{
+    "userId":"6658c5f663ad7a0cfd3cf79e"
+}
+###
+POST http://localhost:3000/user/invite/6659ce5e2c94534cc6f5ce6d
+Content-Type: application/json
+Authorization: : eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2NThjNWY2NjNhZDdhMGNmZDNjZjc5ZSIsImlhdCI6MTcxNzE2Nzg1NiwiZXhwIjoxNzE3MTY5NjU2fQ.O7YUfBScLF7yHXdREYTVbBMIbXkBD6YHtp_mCgejSfM
+
+
 
 ###
