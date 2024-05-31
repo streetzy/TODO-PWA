@@ -78,7 +78,6 @@ app.listen(PORT, () => {
 // DELETE /login/ => deletes refresh token from db
 
 // GET /user/:userId
-// GET /user/:userId/group
 // /register => POST /user
 // PATCH /user/:userId
 
