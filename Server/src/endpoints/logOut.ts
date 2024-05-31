@@ -20,7 +20,7 @@ export async function logOut(req: express.Request, res: express.Response) {
                     User.refreshToken = null
                     User.save()
                 }else{
-                    res.status(401).send("gg")
+                    res.status(401).send("Invalid ref token")
                     console.log("Invalid ref token")
                 }
             }

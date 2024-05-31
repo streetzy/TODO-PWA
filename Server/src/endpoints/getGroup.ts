@@ -1,20 +1,18 @@
-import mongoose from 'mongoose'
-import { user } from '../models/modules.js';
-import { todo } from '../models/modules.js';
-import express from 'express';
-import Joi from 'joi';
-import {Md5} from 'ts-md5';
-import jwt from 'jsonwebtoken'
-import { error,  time } from 'console';
-import { group } from '../models/modules.js';
-import dotenv from 'dotenv'
-import { JsxFlags } from 'typescript';
+import mongoose from "mongoose";
+import { user } from "../models/modules.js";
+import { todo } from "../models/modules.js";
+import express from "express";
+import Joi from "joi";
+import { Md5 } from "ts-md5";
+import jwt from "jsonwebtoken";
+import { error, time } from "console";
+import { group } from "../models/modules.js";
+import dotenv from "dotenv";
+import { JsxFlags } from "typescript";
 
 export async function getGroup(req: express.Request, res: express.Response) {
     try{
         let Group = await group.findById(req.params.groupId).exec();
-        
-            
         
             if(Group){
                 var sent:boolean = false
@@ -25,13 +23,13 @@ export async function getGroup(req: express.Request, res: express.Response) {
                     if(element._id?.toHexString() == req.body.id) {
                         
                         console.log("getGroup :200 group sent")
-                        res.json(Group)
+                        res.status(200).json(Group)
                         sent =true
                         return
                     }
                 }
                 if(!sent){
-                    res.status(401).send("gg unlucko")
+                    res.status(401).json(Group.groupName)
                     console.log("getGroup :401  not a member of this group")
                 }
 
