@@ -58,13 +58,13 @@
                 
                 </div>
                 <div  class = "link">
-                    <p><a href="https://github.com/">GGfgfdgdfgALKANE</a></p>
+                    <p><a href="https://github.com/">Documentation</a></p>
                  </div>
                  <div  class = "link">
-                    <p><a href="https://github.com/">GG ALKANE</a></p>
+                    <p><a href="https://github.com/">News</a></p>
                  </div>
                  <div  class = "link">
-                    <p><a href="https://github.com/">GG ALKANE</a></p>
+                    <p><a href="https://github.com/">Support</a></p>
                  </div>
     
             </div>
@@ -73,12 +73,14 @@
         </div>
         <div class="body1">
            <div class="gg">
+            <div class="LRForm">
             <div class="input"><h1>{isLoggingIn ? 'LOGIN' : 'REGISTER'}</h1></div>
             {#if !isLoggingIn}
                 <div class="input"><input id="username-input" placeholder="USERNAME" type="text"></div>
             {/if}
              <div class="input"><input id="email-input" placeholder="EMAIL" type="text"></div>   
              <div class="input"><input id="password-input" placeholder="{isLoggingIn ? "PASSWORD" : "MINIMUM 10 CHARACTERS"}" type="password"></div>
+            </div>
              <div class="input"><button class="buttom" on:click={() => loginHandler()}>SUBMIT</button></div>
              <div class="input"><button class="buttom" on:click={() => changeRegistrationMode()}>{isLoggingIn ? 'REGISTER' : 'LOGIN'}</button></div>
            </div>
@@ -143,8 +145,8 @@
         align-items: center;
     }
     .gg{
-        width: 250px;
-        height: 500px;
+        width: 320px;
+        height: 450px;
         background-color: grey;
         border-radius: 25px;
         
@@ -155,13 +157,33 @@
         justify-content: center;
         border-radius: 25px;
         width: 100%;
-        margin-top: 30px;
+        margin-top: 10px;
     }
     .buttom{
-        width: 120px;
+        width: 150px;
         height: 40px;
+        border-radius: 10px;
     }
     h1{
         color: white;
+    }
+    #username-input{
+        width: 200px;
+        height: 30px;
+        border-radius: 10px;
+    }
+    #email-input{
+        width: 200px;
+        height: 30px;
+        border-radius: 10px;
+    }
+    #password-input{
+        width: 200px;
+        border-radius: 10px;
+        height: 30px;
+    }
+    .LRForm{
+        margin-bottom: 40px;
+        height: 228px;
     }
 </style>

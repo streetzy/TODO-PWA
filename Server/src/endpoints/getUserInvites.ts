@@ -4,11 +4,11 @@ import express from 'express';
 import mongoose from 'mongoose'
 import { groupInteface } from '../models/modules.js';
 
-export async function getUserInvites(req:express.Request, res :express.Response) {
-    try{
+export async function getUserInvites(req: express.Request, res: express.Response) {
+    try {
         const User = await user.findById(req.body.Id)
         let InviteList = []
-        if (User){
+        if (User) {
             for (let index = 0; index < User.invitelist.length; index++) {
                 const element = User.invitelist[index];
                 const Invite = await invite.findById(req.body.Id).populate<{ group: groupInteface }>("group")
@@ -20,12 +20,12 @@ export async function getUserInvites(req:express.Request, res :express.Response)
                 InviteList.push(NameId)
             }
             res.status(200).json(InviteList)
-        }else{
+        } else {
             res.status(404).send("user not found")
         }
-        
-        
-    }catch(error){
+
+
+    } catch (error) {
         res.status(500).send("internal error")
     }
 }

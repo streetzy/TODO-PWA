@@ -37,7 +37,7 @@ export async function register(req: express.Request, res: express.Response) {
       NewUserGroup.groupName = value.username;
       NewUserGroup.owner = NewUser.id;
       NewUserGroup.members.push(NewUser.id);
-      
+
       await NewUser.save();
       console.log("/register 201: New user added");
       await NewUserGroup.save();
