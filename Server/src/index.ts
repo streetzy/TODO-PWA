@@ -23,7 +23,8 @@ import { cancelInvite } from "./endpoints/CancelInvite.js";
 import { rejectInvite } from "./endpoints/rejectInvite.js";
 import { getGroups } from "./endpoints/getGroups.js";
 import { getTodos } from "./endpoints/getTodos.js";
-
+import {getGroupInvites} from "./endpoints/getGroupInvites.js"
+import { getUserInvites } from "./endpoints/getUserInvites.js";
 const app = express();
 const PORT = 3000;
 const AuthRouter: express.Router = express.Router();
@@ -60,11 +61,13 @@ AuthRouter.post('/group',(req,res)=>addGroup(req,res))
 AuthRouter.get('/group/:groupId',(req,res)=>getGroup(req,res))
 AuthRouter.patch('/group/:groupId',(req,res)=>patchGroup(req,res))
 AuthRouter.get("/group/:groupId/todo", (req, res) => getTodos(req, res));
-
 AuthRouter.post("/group/:groupId/invite",(req,res)=>postNewInvite(req,res))
 AuthRouter.post('/user/invite/:inviteId',(req,res)=>acceptInvite(req,res))
-AuthRouter.post("/group/:groupId/invite/:inviteId",(req,res)=>cancelInvite(req,res))
-AuthRouter.post('/user/:userId/invite/:inviteId',(req,res)=>rejectInvite(req,res))
+AuthRouter.delete("/group/:groupId/invite/:inviteId",(req,res)=>cancelInvite(req,res))
+AuthRouter.delete('/user/invite/:inviteId',(req,res)=>rejectInvite(req,res))
+AuthRouter.get('/user/invite',(req,res)=>getUserInvites(req,res))
+AuthRouter.get('/group/:groupId/invite',(req,res)=>getGroupInvites(req,res))
+
 AuthRouter.post("/todo", (req, res) => addTodo(req, res));
 AuthRouter.delete("/todo/:todoId", (req, res) => deleteTodo(req, res));
 AuthRouter.get("/todo/:todoId", (req, res) => getTodo(req, res));

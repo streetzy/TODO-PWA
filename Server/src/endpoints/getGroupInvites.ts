@@ -4,7 +4,7 @@ import express from 'express';
 import mongoose from 'mongoose'
 import { groupInteface } from '../models/modules.js';
 
-export async function geGroupInvites(req: express.Request, res: express.Response) {
+export async function getGroupInvites(req: express.Request, res: express.Response) {
     try {
         const Group = await group.findById(req.params.groupId)
         if (Group) {
