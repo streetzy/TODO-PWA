@@ -12,9 +12,9 @@ const userSchema = new mongoose.Schema({
 const todoSchema = new mongoose.Schema({
   todoName: { type: String, required: true },
   status: { type: String, required: true },
-  todoContent: { type: String, required: true },
+  todoContent: String,
   authorId: { type: mongoose.Types.ObjectId, ref: "User", required: true },
-  deadline: Date,
+  deadline: String,
   group: { type: mongoose.Types.ObjectId, ref: "group" },
 });
 
@@ -32,33 +32,32 @@ const inviteSchema = new mongoose.Schema({
   group: { type: mongoose.Types.ObjectId, ref: "group", required: true },
 });
 export interface groupInteface {
-  todos?: [mongoose.Types.ObjectId],
-  groupName?: String,
-  invitedUsers?: [ mongoose.Types.ObjectId],
-  owner?: mongoose.Types.ObjectId,
+  todos?: [mongoose.Types.ObjectId];
+  groupName?: String;
+  invitedUsers?: [mongoose.Types.ObjectId];
+  owner?: mongoose.Types.ObjectId;
 
-  members?: [mongoose.Types.ObjectId]
-  
+  members?: [mongoose.Types.ObjectId];
 }
-export interface todoInterface{
-  todoName: String,
-  status:  String,
-  todoContent: String,
-  authorId: mongoose.Types.ObjectId,
-  deadline: Date,
-  group: mongoose.Types.ObjectId,
+export interface todoInterface {
+  todoName: String;
+  status: String;
+  todoContent: String;
+  authorId: mongoose.Types.ObjectId;
+  deadline: Date;
+  group: mongoose.Types.ObjectId;
 }
-export interface userInterface{
-  userName: String,
-  email: String,
-  refreshToken: String,
-  password:  String,
-  groups: [mongoose.Types.ObjectId,]
-  invitelist: [ mongoose.Types.ObjectId],
+export interface userInterface {
+  userName: String;
+  email: String;
+  refreshToken: String;
+  password: String;
+  groups: [mongoose.Types.ObjectId];
+  invitelist: [mongoose.Types.ObjectId];
 }
-export interface inviteInterface{
-  invited:  mongoose.Types.ObjectId,
-  group: mongoose.Types.ObjectId,
+export interface inviteInterface {
+  invited: mongoose.Types.ObjectId;
+  group: mongoose.Types.ObjectId;
 }
 
 export const user = mongoose.model("User", userSchema);

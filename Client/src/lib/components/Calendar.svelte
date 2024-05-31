@@ -1,6 +1,6 @@
 <script lang="ts">
   import { onMount } from "svelte";
-  import { viewedGroup, inCalendarView } from "../stores/data";
+  import { viewedGroupId, viewedGroupName , inCalendarView } from "../stores/data";
 
     let days = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"]
     let months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October","November", "December"]
@@ -18,7 +18,7 @@
 
 
     async function showDayInfo(day: number) {
-        const dateForData = `${day}-${months.findIndex(month => month == currentMonth) + 1}-${currentYear}`; // (all as numbers) DAY-MONTH-YEAR
+        const dateForData = `${currentYear}-${months.findIndex(month => month == currentMonth) + 1}-${day}`; // (all as numbers) YEAR-MONTH-DAY
         displayedDate = `${day}. ${currentMonth} ${currentYear}`;
 
         toggleDayInfoWindow();
@@ -93,10 +93,6 @@
 
     onMount(() => {
         daysInMonth(months.findIndex(month => month == currentMonth));
-
-        viewedGroup.subscribe(() => {
-
-        })
     });
 </script>
 

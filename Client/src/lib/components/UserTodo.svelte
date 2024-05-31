@@ -1,25 +1,31 @@
 <script lang="ts">
     
     import { onMount } from "svelte";
-    import { userJsonData, viewedGroup, inCalendarView } from "../stores/data";
+    import { userJsonData, viewedGroupId, viewedGroupName, inCalendarView, viewedTodo } from "../stores/data";
 
     const URL: string = "http://localhost:3000/";
 
     let isInGroupView: boolean = false;
     let addingGroup: boolean = false;
     let addingTodoWindow: boolean = false;
+    let editingTodoWindow: boolean = false;
 
     let groupPopUpFlag: boolean = true;
     let userTokenId: {userId: string, accessToken: string, refreshToken: string} | null;
     let userId: string | undefined;
-    let currentUserInfo = null;
     let userGroupData: {groupId: string; groupName: string}[];
-
+    let currentTodoId: string = "";
 
     let currentGroupId: string = "";
-    let groupInformation: {groupId: string, todos: [], groupName: string, invitedUsers: [], ownerId: string, members: []} | null = null;
+    let currentGroupName: string = "";
 
-    let todoItems : {todoName: string, todoStatus: string, todoContent: string, authorId: string, deadline: string | null, group: string | null }[] = [];
+    let currentTodo: {todoName: string, status: string, todoContent: string, authorId: string, deadline: string | undefined};
+
+    let wantedUserId: string = "";
+
+    let requestedUserInfo: {userName: string, email: string};
+
+    let todoItems : {todoName: string, status: string, todoId: string}[] = [];
 
     let accessToken: string | undefined;
 
@@ -32,10 +38,16 @@
         findUserGroups();
     })
 
-    function selectGroup(groupId: string) {
-        viewedGroup.set(groupId)
+    function selectGroup(groupId: string, groupName: string) {
+        viewedGroupId.set(groupId)
         
-        viewedGroup.subscribe(value => {
+        viewedGroupName.set(groupName)
+
+        viewedGroupName.subscribe(value => {
+            currentGroupName = value;
+        })
+
+        viewedGroupId.subscribe(value => {
             currentGroupId = value;
         })
 
@@ -58,14 +70,30 @@
         })
 
         todoItems = await response.json();
-        console.log(todoItems);
     }
+
+    async function getTodo() {
+        const response = await fetch(URL + "todo/" + currentTodoId, {
+            headers: {
+                "Authorization": `${accessToken}`,
+                "Content-Type": "application/json"
+            },
+            mode: "cors",
+            method: "GET"
+        })
+
+        currentTodo = await response.json();
+        console.log(currentTodo);
+    }
+
     function showAddingGroupWindow() {
         addingGroup = !addingGroup;
+
+        findUserGroups();
     }
 
     async function getUserInfo() {
-        const response = await fetch(URL + "user/" + userId, {
+        const response = await fetch(URL + "user/" + wantedUserId, {
             headers: {
                 "Authorization": `${accessToken}`,
                 "Content-Type": "application/json"
@@ -74,7 +102,8 @@
             method: "GET",
         })
 
-        currentUserInfo = await response.json();
+        requestedUserInfo = await response.json();
+        console.log(requestedUserInfo);
     }
 
     async function findUserGroups() {
@@ -92,7 +121,7 @@
 
 
     async function addTodo() {
-        const response = await fetch(URL + "todo", {
+        await fetch(URL + "todo", {
             headers: {
                 "Authorization": `${accessToken}`,
                 "Content-Type": "application/json"
@@ -100,41 +129,96 @@
             mode: "cors",
             method: "POST",
             body: JSON.stringify({
-
+                "todoName": (document.getElementById("todo-name") as HTMLInputElement).value,
+                "todoDescription": (document.getElementById("todo-description") as HTMLInputElement).value,
+                "todoDeadline": (document.getElementById("todo-date") as HTMLInputElement).value,
+                "groupId": currentGroupId,
+                "userId": userId
             })
         })
+        showAddingTodoWindow();
+        getTodos();
     }
 
     async function removeTodo(todoId: string) {
-
+        await fetch(URL + "todo/" + todoId, {
+            headers: {
+                "Authorization": `${accessToken}`,
+                "Content-Type": "application/json"
+            },
+            mode: "cors",
+            method: "DELETE",
+            body: JSON.stringify({
+                groupId: currentGroupId
+            })
+        })
+        getTodos();
     }
 
-    async function moveTo(todoId: string) {
-
+    async function editTodo(todoId: string) {
+        await fetch(URL + "todo/" + todoId, {
+            headers: {
+                "Authorization": `${accessToken}`,
+                "Content-Type": "application/json"
+            },
+            mode: "cors",
+            method: "PATCH",
+            body: JSON.stringify({
+                "changeInformation": true,
+                "changeName": (document.getElementById("edit-todo-name") as HTMLInputElement).value,
+                "changeDescription": (document.getElementById("edit-todo-description") as HTMLInputElement).value,
+                "changeDeadline": (document.getElementById("edit-todo-date") as HTMLInputElement).value
+            })
+        })
+        showEditingTodoWindow()
+        getTodos();
     }
 
-    function showInformation(todoId: string) {
+    async function moveTo(todoId: string, where: string) { // where being the working-on tab or the done tab
+        await fetch(URL + "todo/" + todoId, {
+            headers: {
+                "Authorization": `${accessToken}`,
+                "Content-Type": "application/json"
+            },
+            mode: "cors",
+            method: "PATCH",
+            body: JSON.stringify({
+                "changeStatus": where
+            })
+        })
 
-    }  
+        getTodos();
+    }
 
-    // async function addGroup() { // not used yet
-    //     const response = await fetch(URL + "group", {
-    //         headers: {
-    //             "Authorization": `${accessToken}`,
-    //             "Content-Type": "application/json"
-    //         },
-    //         mode: "cors",
-    //         method: "POST",
-    //         body: JSON.stringify({
-    //             "groupName": (document.getElementById("groupName") as HTMLInputElement).value
-    //         })
-    //     })
-    //     showGroupPopUp();
+    async function addGroup() {
+        const response = await fetch(URL + "group", {
+            headers: {
+                "Authorization": `${accessToken}`,
+                "Content-Type": "application/json"
+            },
+            mode: "cors",
+            method: "POST",
+            body: JSON.stringify({
+                "groupName": (document.getElementById("group-name") as HTMLInputElement).value,
+                "id": userId,
+            })
+        })
 
-    //     groupId = await response.json();
-    //     console.log(groupId);
+        findUserGroups();
+        showAddingGroupWindow();
+
+        // groupId = await response.json();
+        // console.log(groupId);
         
-    // }
+    }
+
+    async function showInformation(todoId: string) {
+        currentTodoId = todoId;
+        await getTodo(); //before showing the editor window, wait for the getTodo to run
+        wantedUserId = currentTodo.authorId;
+        await getUserInfo();
+        showEditingTodoWindow();
+    }
 
     function showGroupPopUp() {
         groupPopUpFlag = !groupPopUpFlag;
@@ -146,9 +230,35 @@
         addingTodoWindow = !addingTodoWindow;
     }
 
+    function showEditingTodoWindow() {
+        editingTodoWindow = !editingTodoWindow;
+    }
+
 </script>
     
 <main>
+    {#if editingTodoWindow} <!--haha same chunk of code but too dumb to remake this in a smart away whilst utilizing Svelte-->
+        <div class="adding-todo-window">
+            <div class="input">
+                <h1 class="add-todo-header">Name Of Todo</h1>
+                <input class="todo-input" value={currentTodo.todoName} type="text" id="edit-todo-name">
+            </div>
+            <div class="input">
+                <h1 class="add-todo-header">Author of Todo</h1>
+                <h3>{requestedUserInfo.userName}</h3>
+            </div>
+            <div class="input">
+                <h1 class="add-todo-header">Description Of Todo</h1>
+                <input class="todo-input" value={currentTodo.todoContent} type="text" id="edit-todo-description">
+            </div>
+            <div class="input">
+                <h1 class="add-todo-header">Deadline</h1>
+                <input class="todo-input" value={currentTodo.deadline ? currentTodo.deadline : ""} type="date" id="edit-todo-date" min="1970-01-01">
+            </div>
+            <button class="add-button" on:click={()=>editTodo(currentTodoId)}>SUBMIT</button>
+            <button class="add-button" on:click={()=>showEditingTodoWindow()}>CANCEL</button>
+        </div>
+    {/if}
     {#if addingTodoWindow}
         <div class="adding-todo-window">
             <div class="input">
@@ -176,17 +286,17 @@
             </div>
             <div class="group-display">
                 {#each userGroupData as userGroup}
-                    <button class="select-group" on:click={()=>selectGroup(userGroup.groupId)}>{userGroup.groupName}</button>
+                    <button class="select-group" on:click={()=>selectGroup(userGroup.groupId, userGroup.groupName)}>{userGroup.groupName}</button>
                 {/each}
             </div>
         </div>
         {#if addingGroup}
         <div class="groupDetails">
-            <h1 class="groupHeader">SHOWN GROUPS</h1>
+            <h1 class="groupHeader">ADD GROUP</h1>
             <div class="groupInput">
-                <input class="inputText" id="groupName" type="text">
-                <button class="inputButton">SUBMIT</button>
-                <button class="inputButton" on:click={()=>showAddingGroupWindow()}>RETURN TO GROUP VIEW</button>
+                <input class="inputText" id="group-name" type="text" placeholder="More than 4 characters!">
+                <button class="inputButton" on:click={()=>addGroup()}>SUBMIT</button>
+                <button class="inputButton" on:click={()=>showAddingGroupWindow()}>GROUP VIEW</button>
             </div>
         </div>
         {/if}
@@ -195,7 +305,7 @@
         <button class="calendar-view" on:click={() => swapToCalendar()}><h1 class="button-text">CALENDAR VIEW</h1></button>
         <button class="group-view" on:click={() => showGroupPopUp()}><h1 class="button-text">GROUP VIEW</h1></button>
         <div class="dropdown">
-            <h1 class="username">USERNAME</h1>
+            <h1 class="username">{currentGroupName}</h1>
             <button class="sign-out">SIGN OUT</button>
         </div>
     </nav>
@@ -204,23 +314,21 @@
         <div class="todo to-do-tab">
             <div class="header">
                 <h1>TO-DO</h1>
-                {#if !addingTodoWindow}
                 <button class="addTodoButton" on:click={()=>showAddingTodoWindow()}>+</button>
-                {/if}
             </div>
 
             <div class="todo-items">
                 <!--Basic todo item template, to be replaced-->
                 {#each todoItems as todo}
-                {#if todo.todoStatus == "todo"}
+                {#if todo.status == "to-do"}
                 <div class="todo-item">
                     <div class="todo-item-name">
-                        <h3>TODOITEM</h3>
+                        <h3>{todo.todoName}</h3>
                     </div>
                     <div class="buttons">
-                        <button on:click={() => moveTo("tempString")} class="to-working-on"></button>
-                        <button on:click={() => showInformation("tempString")} class="todo-info"></button>
-                        <button on:click={() => removeTodo("tempString")} class="remove"></button>
+                        <button on:click={() => moveTo(`${todo.todoId}`, "working-on")} class="to-working-on"></button>
+                        <button on:click={() => showInformation(`${todo.todoId}`)} class="todo-info"></button>
+                        <button on:click={() => removeTodo(`${todo.todoId}`)} class="remove"></button>
                     </div>
                 </div>
                 {/if}
@@ -236,15 +344,15 @@
             <div class="todo-items">
                 <!--Basic todo item template, to be replaced-->
                 {#each todoItems as todo}
-                {#if todo.todoStatus == "working-on"}
+                {#if todo.status == "working-on"}
                 <div class="todo-item">
                     <div class="todo-item-name">
-                        <h3>TODOITEM</h3>
+                        <h3>{todo.todoName}</h3>
                     </div>
                     <div class="buttons">
-                        <button on:click={() => moveTo("tempString")} class="to-working-on"></button>
-                        <button on:click={() => showInformation("tempString")} class="todo-info"></button>
-                        <button on:click={() => removeTodo("tempString")} class="remove"></button>
+                        <button on:click={() => moveTo(`${todo.todoId}`, "done")} class="to-working-on"></button>
+                        <button on:click={() => showInformation(`${todo.todoId}`)} class="todo-info"></button>
+                        <button on:click={() => removeTodo(`${todo.todoId}`)} class="remove"></button>
                     </div>
                 </div>
                 {/if}
@@ -260,14 +368,14 @@
             <div class="todo-items">
                 <!--Basic todo item template, to be replaced-->
                 {#each todoItems as todo}
-                {#if todo.todoStatus == "done"}
+                {#if todo.status == "done"}
                 <div class="todo-item">
                     <div class="todo-item-name">
-                        <h3>TODOITEM</h3>
+                        <h3>{todo.todoName}</h3>
                     </div>
                     <div class="buttons">
-                        <button on:click={() => showInformation("tempString")} class="todo-info"></button>
-                        <button on:click={() => removeTodo("tempString")} class="remove"></button>
+                        <button on:click={() => showInformation(`${todo.todoId}`)} class="todo-info"></button>
+                        <button on:click={() => removeTodo(`${todo.todoId}`)} class="remove"></button>
                     </div>
                 </div>
                 {/if}
@@ -330,6 +438,7 @@
         justify-content: center;
         align-items: center;
         gap: 0.125rem;
+        border-radius: 20px;
     }
 
     .select-group {
@@ -374,7 +483,7 @@
     }
 
     .add-group {
-        z-index: 0;
+        z-index: 3;
         width: 20vw;
         height: 8vh;
         font-size: 2rem;
@@ -412,15 +521,16 @@
     }
 
     .groupDetails {
-        z-index: 1;
+        z-index: 3;
         display: flex;
         flex-direction: column;
-        position: absolute;
         justify-content: center;
         align-items: center;
         background-color: #393939;
         height: 100vh;
         width: 100vw;
+        position: absolute;
+        top: 0;
     }
 
     nav {
