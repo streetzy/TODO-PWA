@@ -1,9 +1,14 @@
 <script lang="ts">
     
     import { onMount } from "svelte";
-    import { userJsonData, viewedGroupId, viewedGroupName, inCalendarView, viewedTodo } from "../stores/data";
+    import { userJsonData, viewedGroupId, viewedGroupName, inCalendarView } from "../stores/data";
 
     const URL: string = "http://localhost:3000/";
+
+    let isInInviteView: boolean = false;
+    let acceptingInvites: boolean = false;
+    let showAddInviteWindow: boolean = false;
+    let groupInvites: {inviteId: string, userName: string}[];
 
     let isInGroupView: boolean = false;
     let addingGroup: boolean = false;
@@ -21,7 +26,7 @@
 
     let currentTodo: {todoName: string, status: string, todoContent: string, authorId: string, deadline: string | undefined};
 
-    let wantedUserId: string = "";
+    let wantedUserId: string | undefined = "";
 
     let requestedUserInfo: {userName: string, email: string};
 
@@ -83,7 +88,6 @@
         })
 
         currentTodo = await response.json();
-        console.log(currentTodo);
     }
 
     function showAddingGroupWindow() {
@@ -103,7 +107,6 @@
         })
 
         requestedUserInfo = await response.json();
-        console.log(requestedUserInfo);
     }
 
     async function findUserGroups() {
@@ -133,7 +136,6 @@
                 "todoDescription": (document.getElementById("todo-description") as HTMLInputElement).value,
                 "todoDeadline": (document.getElementById("todo-date") as HTMLInputElement).value,
                 "groupId": currentGroupId,
-                "userId": userId
             })
         })
         showAddingTodoWindow();
@@ -191,7 +193,7 @@
     }
 
     async function addGroup() {
-        const response = await fetch(URL + "group", {
+        await fetch(URL + "group", {
             headers: {
                 "Authorization": `${accessToken}`,
                 "Content-Type": "application/json"
@@ -199,16 +201,12 @@
             mode: "cors",
             method: "POST",
             body: JSON.stringify({
-                "groupName": (document.getElementById("group-name") as HTMLInputElement).value,
-                "id": userId,
+                "groupName": (document.getElementById("group-name") as HTMLInputElement).value
             })
         })
 
         findUserGroups();
         showAddingGroupWindow();
-
-        // groupId = await response.json();
-        // console.log(groupId);
         
     }
 
@@ -218,6 +216,36 @@
         wantedUserId = currentTodo.authorId;
         await getUserInfo();
         showEditingTodoWindow();
+    }
+
+    async function addInvite() {
+
+    }
+
+    async function getGroupInvites() {
+        const response = await fetch(URL + "group/" + currentGroupId + "/invite", {
+            headers: {
+                "Authorization": `${accessToken}`,
+                "Content-Type": "application/json"
+            },
+            mode: "cors",
+            method: "GET"
+        })
+
+        groupInvites = await response.json();
+        console.log(groupInvites);
+    }
+
+    function acceptingInviteView() {
+        acceptingInvites = !acceptingInvites;
+    }
+    
+    function showInviteView () {
+        isInInviteView = !isInInviteView
+
+        wantedUserId = userId;
+        getUserInfo();
+        getGroupInvites();
     }
 
     function showGroupPopUp() {
@@ -237,6 +265,16 @@
 </script>
     
 <main>
+    {#if isInInviteView}
+        <div class="invite-view-content">
+            <nav>
+                <button class="button-text" on:click={()=>showInviteView()}>TODOs</button>
+                <button class="button-text" on:click={()=>addInvite()}>ADD</button>
+                <button class="button-text" on:click={()=>acceptingInviteView()}>{acceptingInvites ? "GROUP VIEW" : "USER VIEW"}</button>
+                <h1 class="username">{acceptingInvites ? requestedUserInfo.userName : currentGroupName}</h1>
+            </nav>
+        </div>
+    {/if}
     {#if editingTodoWindow} <!--haha same chunk of code but too dumb to remake this in a smart away whilst utilizing Svelte-->
         <div class="adding-todo-window">
             <div class="input">
@@ -304,6 +342,7 @@
     <nav>
         <button class="calendar-view" on:click={() => swapToCalendar()}><h1 class="button-text">CALENDAR VIEW</h1></button>
         <button class="group-view" on:click={() => showGroupPopUp()}><h1 class="button-text">GROUP VIEW</h1></button>
+        <button class="invite-view" on:click={() => showInviteView()}><h1 class="button-text">INVITES</h1></button>
         <div class="dropdown">
             <h1 class="username">{currentGroupName}</h1>
             <button class="sign-out">SIGN OUT</button>
@@ -394,6 +433,19 @@
         height: 100vh;
         width: 100vw;
         background-color: #393939;
+    }
+
+    .invite-view-content {
+        position: absolute;
+        top: 0;
+        width: 100vw;
+        height: 100vh;
+        z-index: 3;
+        background-color: #393939;
+    }
+
+    .invite-view-content {
+        z-index: 3;
     }
 
     .todo-input {
@@ -696,19 +748,12 @@
         background-color: #E8BF8C;
     }
 
-    .to-completed {
-        width: 3rem;
-        height: 3rem;
-        border-radius: 100%;
-        background-color: #B8E6AB;
-    }
-
     .todo-item-name {
         width: 60%;
         height: 100%;
         display: flex;
         justify-content: center;
         align-items: center;
-        font-size: 2rem;
+        font-size: 1.4rem;
     }
 </style>

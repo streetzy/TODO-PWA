@@ -11,7 +11,7 @@ export async function addTodo(req: Request, res: Response) {
       res.status(400).send("Invalid todo name (no length)");
       return;
     }
-    newTodo.authorId = req.body.userId;
+    newTodo.authorId = req.body.id;
     newTodo.todoName = req.body.todoName;
     newTodo.todoContent = req.body.todoDescription;
     newTodo.status = "to-do";
