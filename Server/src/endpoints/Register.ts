@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import { user } from "../models/modules.js";
+import { user, group } from "../models/modules.js";
 
 import express from "express";
 import Joi from "joi";
@@ -15,6 +15,7 @@ const registerSchema = Joi.object({
 export async function register(req: express.Request, res: express.Response) {
   try {
     const NewUser = new user();
+    const NewUserGroup = new group();
     const { error, value } = registerSchema.validate(req.body);
 
     if (error != undefined) {
@@ -31,12 +32,18 @@ export async function register(req: express.Request, res: express.Response) {
       NewUser.userName = value.username;
       NewUser.email = value.email;
       NewUser.password = Md5.hashStr(value.password);
+      NewUser.groups.push(NewUserGroup.id);
+
+      NewUserGroup.groupName = value.username;
+      NewUserGroup.owner = NewUser.id;
+      NewUserGroup.members.push(NewUser.id);
+      
       await NewUser.save();
       console.log("/register 201: New user added");
-      res.status(201).send("new user added");
+      await NewUserGroup.save();
+      res.status(201).send("New user added");
     }
   } catch {
-    console.log("/register 500: Try catch exeption");
     res.status(500).send("Internal server error");
   }
 }

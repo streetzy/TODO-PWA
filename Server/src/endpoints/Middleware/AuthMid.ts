@@ -1,16 +1,13 @@
-
-import express from 'express';
-import Joi from 'joi';
-import {Md5} from 'ts-md5';
-import jwt from 'jsonwebtoken'
-import { error, time } from 'console';
-import dotenv from 'dotenv'
-import { generateToke } from '../Login.js';
-import { access } from 'fs';
-import { user } from '../../models/modules.js';
+import express from "express";
+import Joi from "joi";
+import { Md5 } from "ts-md5";
+import jwt from "jsonwebtoken";
+import { error, time } from "console";
+import dotenv from "dotenv";
+import { generateToke } from "../Login.js";
+import { access } from "fs";
+import { user } from "../../models/modules.js";
 dotenv.config();
-
-
 
 export async function AuthMidleware(req: express.Request, res: express.Response, next :express.NextFunction):Promise<void>{
     try{

@@ -1,34 +1,109 @@
 <script lang="ts">
+    
     import { onMount } from "svelte";
-    import { userJsonData } from "../stores/data";
+    import { userJsonData, viewedGroup, inCalendarView } from "../stores/data";
+
+    const URL: string = "http://localhost:3000/";
+
+    let isInGroupView: boolean = false;
+    let addingGroup: boolean = false;
+    let addingTodoWindow: boolean = false;
+
+    let groupPopUpFlag: boolean = true;
+    let userTokenId: {userId: string, accessToken: string, refreshToken: string} | null;
+    let userId: string | undefined;
+    let currentUserInfo = null;
+    let userGroupData: {groupId: string; groupName: string}[];
 
 
-    let groupPopUpFlag: boolean = false;
-    let userTokenId: {userId: string, accessToken: string, refreshToken: string} | null = null;
-    let groupId: string | null = null;
+    let currentGroupId: string = "";
+    let groupInformation: {groupId: string, todos: [], groupName: string, invitedUsers: [], ownerId: string, members: []} | null = null;
 
-    let refreshToken: string | undefined;
+    let todoItems : {todoName: string, todoStatus: string, todoContent: string, authorId: string, deadline: string | null, group: string | null }[] = [];
+
+    let accessToken: string | undefined;
 
     onMount(() => {
         userJsonData.subscribe(value => {
             userTokenId = value;
         })
-        refreshToken = userTokenId?.refreshToken;
-
-        console.log(refreshToken);
+        accessToken = userTokenId?.accessToken;
+        userId = userTokenId?.userId;
+        findUserGroups();
     })
 
+    function selectGroup(groupId: string) {
+        viewedGroup.set(groupId)
+        
+        viewedGroup.subscribe(value => {
+            currentGroupId = value;
+        })
 
-    // async function getAllUserData() { // not used yet
-    //     const response = await fetch(`http://localhost:3000/user/${....}`, {
-    //         headers: {
-    //             "Authorization": `${refreshToken}`,
-    //             "Content-Type": "application/json"
-    //         },
-    //         mode: "cors",
-    //         method: "GET"
-    //     })
-    // }
+        showGroupPopUp();
+        getTodos();
+    }
+
+    function swapToCalendar() {
+        inCalendarView.set(true);
+    }
+
+    async function getTodos() {
+        const response = await fetch(URL + "group/" + currentGroupId + "/todo" , {
+            headers: {
+                "Authorization": `${accessToken}`,
+                "Content-Type": "application/json"
+            },
+            mode: "cors",
+            method: "GET"
+        })
+
+        todoItems = await response.json();
+        console.log(todoItems);
+    }
+    function showAddingGroupWindow() {
+        addingGroup = !addingGroup;
+    }
+
+    async function getUserInfo() {
+        const response = await fetch(URL + "user/" + userId, {
+            headers: {
+                "Authorization": `${accessToken}`,
+                "Content-Type": "application/json"
+            },
+            mode: "cors",
+            method: "GET",
+        })
+
+        currentUserInfo = await response.json();
+    }
+
+    async function findUserGroups() {
+        const response = await fetch(URL + "user/" + userId + "/group", {
+            headers: {
+                "Authorization": `${accessToken}`,
+                "Content-Type": "application/json"
+            },
+            mode: "cors",
+            method: "GET"
+        })
+
+        userGroupData = await response.json();
+    }
+
+
+    async function addTodo() {
+        const response = await fetch(URL + "todo", {
+            headers: {
+                "Authorization": `${accessToken}`,
+                "Content-Type": "application/json"
+            },
+            mode: "cors",
+            method: "POST",
+            body: JSON.stringify({
+
+            })
+        })
+    }
 
     async function removeTodo(todoId: string) {
 
@@ -38,49 +113,87 @@
 
     }
 
-    async function showInformation(todoId: string) {
+    function showInformation(todoId: string) {
 
     }  
 
-    async function addGroup() { // not used yet
-        const response = await fetch(`http://localhost:3000/group`, {
-            headers: {
-                "Authorization": `${refreshToken}`,
-                "Content-Type": "application/json"
-            },
-            mode: "cors",
-            method: "POST",
-            body: JSON.stringify({
-                "groupName": (document.getElementById("groupName") as HTMLInputElement).value
-            })
-        })
-        showGroupPopUp();
+    // async function addGroup() { // not used yet
+    //     const response = await fetch(URL + "group", {
+    //         headers: {
+    //             "Authorization": `${accessToken}`,
+    //             "Content-Type": "application/json"
+    //         },
+    //         mode: "cors",
+    //         method: "POST",
+    //         body: JSON.stringify({
+    //             "groupName": (document.getElementById("groupName") as HTMLInputElement).value
+    //         })
+    //     })
+    //     showGroupPopUp();
 
-        groupId = await response.json();
-        console.log(groupId);
+    //     groupId = await response.json();
+    //     console.log(groupId);
         
-    }
+    // }
 
     function showGroupPopUp() {
         groupPopUpFlag = !groupPopUpFlag;
+
+        findUserGroups();
     }
 
+    function showAddingTodoWindow() {
+        addingTodoWindow = !addingTodoWindow;
+    }
 
 </script>
     
 <main>
-    {#if groupPopUpFlag}
-        <div class="groupDetails">
-            <h1 class="groupHeader">ENTER GROUP NAME</h1>
-            <div class="groupInput">
-                <input class="inputText" id="groupName" type="text">
-                <button class="inputButton" on:click={() => addGroup()}>SUBMIT</button>
+    {#if addingTodoWindow}
+        <div class="adding-todo-window">
+            <div class="input">
+                <h1 class="add-todo-header">Name Of Todo</h1>
+                <input class="todo-input" type="text" id="todo-name">
             </div>
+            <div class="input">
+                <h1 class="add-todo-header">Description Of Todo</h1>
+                <input class="todo-input" type="text" id="todo-description">
+            </div>
+            <div class="input">
+                <h1 class="add-todo-header">Deadline</h1>
+                <input class="todo-input" type="date" id="todo-date" min="1970-01-01">
+            </div>
+            <button class="add-button" on:click={()=>addTodo()}>SUBMIT</button>
+            <button class="add-button" on:click={()=>showAddingTodoWindow()}>CANCEL</button>
         </div>
     {/if}
+    {#if groupPopUpFlag && userGroupData != null && userGroupData != undefined}
+        <div class="group-pop-up-container">
+            <div class="group-pop-up-header">
+                <h1 class="group-view-header">GROUP VIEW</h1>
+                <button class="return-to-todo-menu" on:click={() => showGroupPopUp()}>RETURN TO TODO</button>
+                <button class="add-group" on:click={() => showAddingGroupWindow()}>ADD GROUP</button>
+            </div>
+            <div class="group-display">
+                {#each userGroupData as userGroup}
+                    <button class="select-group" on:click={()=>selectGroup(userGroup.groupId)}>{userGroup.groupName}</button>
+                {/each}
+            </div>
+        </div>
+        {#if addingGroup}
+        <div class="groupDetails">
+            <h1 class="groupHeader">SHOWN GROUPS</h1>
+            <div class="groupInput">
+                <input class="inputText" id="groupName" type="text">
+                <button class="inputButton">SUBMIT</button>
+                <button class="inputButton" on:click={()=>showAddingGroupWindow()}>RETURN TO GROUP VIEW</button>
+            </div>
+        </div>
+        {/if}
+    {:else}
     <nav>
-        <button class="calendar-view"><h1 class="button-text">CALENDAR VIEW</h1></button>
-        <button class="group-view"><h1 class="button-text">GROUP VIEW</h1></button>
+        <button class="calendar-view" on:click={() => swapToCalendar()}><h1 class="button-text">CALENDAR VIEW</h1></button>
+        <button class="group-view" on:click={() => showGroupPopUp()}><h1 class="button-text">GROUP VIEW</h1></button>
         <div class="dropdown">
             <h1 class="username">USERNAME</h1>
             <button class="sign-out">SIGN OUT</button>
@@ -91,10 +204,15 @@
         <div class="todo to-do-tab">
             <div class="header">
                 <h1>TO-DO</h1>
+                {#if !addingTodoWindow}
+                <button class="addTodoButton" on:click={()=>showAddingTodoWindow()}>+</button>
+                {/if}
             </div>
 
             <div class="todo-items">
                 <!--Basic todo item template, to be replaced-->
+                {#each todoItems as todo}
+                {#if todo.todoStatus == "todo"}
                 <div class="todo-item">
                     <div class="todo-item-name">
                         <h3>TODOITEM</h3>
@@ -105,6 +223,8 @@
                         <button on:click={() => removeTodo("tempString")} class="remove"></button>
                     </div>
                 </div>
+                {/if}
+                {/each}
             </div>
             
         </div>
@@ -115,16 +235,20 @@
 
             <div class="todo-items">
                 <!--Basic todo item template, to be replaced-->
+                {#each todoItems as todo}
+                {#if todo.todoStatus == "working-on"}
                 <div class="todo-item">
                     <div class="todo-item-name">
                         <h3>TODOITEM</h3>
                     </div>
                     <div class="buttons">
-                        <button on:click={() => moveTo("tempString")} class="to-completed"></button>
+                        <button on:click={() => moveTo("tempString")} class="to-working-on"></button>
                         <button on:click={() => showInformation("tempString")} class="todo-info"></button>
                         <button on:click={() => removeTodo("tempString")} class="remove"></button>
                     </div>
                 </div>
+                {/if}
+                {/each}
             </div>
             
         </div>
@@ -135,6 +259,8 @@
 
             <div class="todo-items">
                 <!--Basic todo item template, to be replaced-->
+                {#each todoItems as todo}
+                {#if todo.todoStatus == "done"}
                 <div class="todo-item">
                     <div class="todo-item-name">
                         <h3>TODOITEM</h3>
@@ -144,10 +270,14 @@
                         <button on:click={() => removeTodo("tempString")} class="remove"></button>
                     </div>
                 </div>
+                {/if}
+                {/each}
             </div>
             
         </div>
     </div>
+
+    {/if}
 </main>
 
 <style>
@@ -156,6 +286,101 @@
         height: 100vh;
         width: 100vw;
         background-color: #393939;
+    }
+
+    .todo-input {
+        height: 100%;
+        width: 50%;
+        justify-content: center;
+        text-align: center;
+        font-size: 1.125rem;
+        line-break: auto;
+    }
+
+    .add-button {
+        width: 75%;
+        height: 10%;
+        font-size: 1.5rem;
+    }
+
+    .add-todo-header {
+        margin: 0;
+        font-size: 2rem;
+    }
+
+    .input {
+        width: 100%;
+        height: 30%;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .adding-todo-window {
+        top: 25%;
+        left: 25%;
+        width: 50vw;
+        height: 60vh;
+        position: absolute;
+        background-color: #393939;
+        z-index: 3;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        gap: 0.125rem;
+    }
+
+    .select-group {
+        width: 80vw;
+        height: 5vh;
+        font-size: 1.5rem;
+    }
+
+    .group-view-header {
+        font-size: 2rem;
+        text-align: center;
+        margin-top: 0;
+    }
+
+    .group-pop-up-container {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .group-pop-up-header {
+        height: 10vh;
+        width: 100vw;
+    }
+
+    .group-display {
+        width: 100vw;
+        height: 90vh;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        overflow-y: auto;
+        gap: 0.125rem;
+    }
+
+    .return-to-todo-menu {
+        width: 20vw;
+        height: 8vh;
+        font-size: 2rem;
+        position: absolute;
+        top: 0px;
+        right: 0px;
+    }
+
+    .add-group {
+        z-index: 0;
+        width: 20vw;
+        height: 8vh;
+        font-size: 2rem;
+        position: absolute;
+        top: 0px;
+        left: 0px;
     }
 
     .groupHeader {
@@ -187,6 +412,7 @@
     }
 
     .groupDetails {
+        z-index: 1;
         display: flex;
         flex-direction: column;
         position: absolute;
@@ -222,14 +448,18 @@
     }
 
     .username {
+        z-index: 2;
         line-height: 0;
         font-size: 3rem;
     }
 
     .sign-out {
+        z-index: 1;
         height: 100%;
         width: 100%;
         display: none;
+        padding-top: 6rem;
+        font-size: 2rem;
     }
 
     .dropdown {
@@ -261,6 +491,7 @@
     }
 
     .todo {
+        position: relative;
         display: flex;
         flex-direction: column;
         height: 95%;
@@ -268,6 +499,16 @@
         justify-content: center;
         align-items: center;
         border-radius: 2.5rem;
+    }
+
+    .addTodoButton { 
+        position: absolute;
+        left: 80%;
+        width: 3rem;
+        height: 3rem;
+        border-radius: 100%;
+        border-style: solid;
+        font-size: 2rem;
     }
 
     .to-do-tab {

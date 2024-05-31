@@ -1,9 +1,6 @@
-
 import  express from "express";
 import mongoose from "mongoose";
 import { user } from "../models/modules.js";
-
-
 
 export async function getUser(req: express.Request, res: express.Response) {
     try{
@@ -17,5 +14,4 @@ export async function getUser(req: express.Request, res: express.Response) {
     } catch{
         res.status(500).send("server error")
     }
-
 }

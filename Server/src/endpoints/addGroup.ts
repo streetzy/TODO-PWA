@@ -17,7 +17,7 @@ export async function addGroup(req:express.Request, res :express.Response) {
 
             res.status(200).json(Group._id);
         }else{
-            res.status(400).send(" group name too short")
+            res.status(400).send("group name too short")
         }
     }catch(error){
         console.log("addGroup :500")
