@@ -72,5 +72,9 @@ Content-Type: application/json
 Authorization: : eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2NThjNWY2NjNhZDdhMGNmZDNjZjc5ZSIsImlhdCI6MTcxNzE2Nzg1NiwiZXhwIjoxNzE3MTY5NjU2fQ.O7YUfBScLF7yHXdREYTVbBMIbXkBD6YHtp_mCgejSfM
 
 
-
 ###
+GET http://localhost:3000/user/invite
+Authorization: : eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2NThjNWY2NjNhZDdhMGNmZDNjZjc5ZSIsImlhdCI6MTcxNzE5NDI1OCwiZXhwIjoxNzE3MTk2MDU4fQ.87Sf34RtvlNV43j9Sk31e3nmtVdO3boaQ8pgodjnFa4
+###
+GET http://localhost:3000/group/6659cad668b199c72e9a401e/invite
+Authorization: : eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2NThjNWY2NjNhZDdhMGNmZDNjZjc5ZSIsImlhdCI6MTcxNzE5NDI1OCwiZXhwIjoxNzE3MTk2MDU4fQ.87Sf34RtvlNV43j9Sk31e3nmtVdO3boaQ8pgodjnFa4

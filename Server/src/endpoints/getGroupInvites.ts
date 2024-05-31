@@ -18,9 +18,9 @@ export async function getGroupInvites(req: express.Request, res: express.Respons
 
                     for (let index = 0; index < Group.invitedUsers.length; index++) {
                         const element = Group.invitedUsers[index];
-                        const Invite = await invite.findById(req.body.Id).populate<{ invited: userInterface }>("invited")
+                        const Invite = await invite.findById(element._id).populate<{ invited: userInterface }>("invited")
                         let NameId = {
-                            inviteId: Invite?._id.id,
+                            inviteId: Invite?._id.toHexString(),
                             UserName: Invite?.invited.userName,
 
                         }

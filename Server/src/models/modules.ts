@@ -60,7 +60,9 @@ export interface inviteInterface{
   invited:  mongoose.Types.ObjectId,
   group: mongoose.Types.ObjectId,
 }
-
+export type OrderLine = {
+ id:string
+}
 export const user = mongoose.model("User", userSchema);
 export const todo = mongoose.model("todo", todoSchema);
 export const group = mongoose.model("group", groupSchema);
