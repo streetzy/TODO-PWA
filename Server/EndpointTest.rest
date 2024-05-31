@@ -67,3 +67,10 @@ Authorization: : eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2NThjNWY2NjNhZD
 
 
 ###
+DELETE  http://localhost:3000/user/invite/6659ce5e2c94534cc6f5ce6d
+Content-Type: application/json
+Authorization: : eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2NThjNWY2NjNhZDdhMGNmZDNjZjc5ZSIsImlhdCI6MTcxNzE2Nzg1NiwiZXhwIjoxNzE3MTY5NjU2fQ.O7YUfBScLF7yHXdREYTVbBMIbXkBD6YHtp_mCgejSfM
+
+
+
+###
