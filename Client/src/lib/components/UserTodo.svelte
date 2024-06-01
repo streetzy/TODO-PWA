@@ -445,7 +445,6 @@
         <div class="group-pop-up-container">
             <div class="group-pop-up-header">
                 <h1 class="group-view-header">GROUP VIEW</h1>
-                <button class="return-to-todo-menu" on:click={() => showGroupPopUp()}>RETURN TO TODO</button>
                 <button class="add-group" on:click={() => showAddingGroupWindow()}>ADD GROUP</button>
             </div>
             <div class="group-display">
