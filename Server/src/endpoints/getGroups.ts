@@ -12,10 +12,11 @@ export async function getGroups(req: express.Request, res: express.Response) {
       if (Group) {
         groupNameId.push({
           groupName: String(Group?.groupName),
-          groupId: User.groups[entry]._id?.toHexString(),
+          groupId: Group.id,
         });
       } else {
         res.status(404).send("GROUP NOT FOUND");
+        return;
       }
     }
     res.json(groupNameId);

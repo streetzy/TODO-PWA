@@ -23,8 +23,8 @@ import { cancelInvite } from "./endpoints/CancelInvite.js";
 import { rejectInvite } from "./endpoints/rejectInvite.js";
 import { getGroups } from "./endpoints/getGroups.js";
 import { getTodos } from "./endpoints/getTodos.js";
-import {getGroupInvites} from "./endpoints/getGroupInvites.js"
 import { getUserInvites } from "./endpoints/getUserInvites.js";
+import { getGroupInvites } from "./endpoints/getGroupInvites.js";
 const app = express();
 const PORT = 3000;
 const AuthRouter: express.Router = express.Router();
@@ -43,33 +43,47 @@ app.use(
 app.use(bodyParser.text());
 app.use(bodyParser.json());
 
-app.post('/user',(req,res)=>register(req,res))  
-app.post('/login',(req,res)=>login(req,res))
-app.post('/token',(req,res)=>getToken(req,res))
+app.post("/user", (req, res) => register(req, res));
+app.post("/login", (req, res) => login(req, res));
+app.post("/token", (req, res) => getToken(req, res));
 
-app.use(AuthRouter)
+app.use(AuthRouter);
 
-AuthRouter.use((req,res,next)=>AuthMidleware(req,res,next))
+AuthRouter.use((req, res, next) => AuthMidleware(req, res, next));
 
-AuthRouter.delete('/login',(req,res)=>logOut(req,res))
-AuthRouter.patch('/user',(req,res)=>patchUser(req,res))
-AuthRouter.post('/group',(req,res)=>addGroup(req,res))
+AuthRouter.delete("/login", (req, res) => logOut(req, res));
+AuthRouter.patch("/user", (req, res) => patchUser(req, res));
+
+AuthRouter.use("/user/:userId/group", (req, res) => getGroups(req, res));
+
+AuthRouter.post("/group", (req, res) => addGroup(req, res));
+AuthRouter.get("/group/:groupId", (req, res) => getGroup(req, res));
+AuthRouter.patch("/group/:groupId", (req, res) => patchGroup(req, res));
+AuthRouter.get("/group/:groupId/todo", (req, res) => getTodos(req, res));
+
+AuthRouter.post("/group/:groupId/invite", (req, res) =>
+  postNewInvite(req, res)
+);
+
+AuthRouter.get("/user/invite", (req, res) => {
+  getUserInvites(req, res);
+});
+
+AuthRouter.get("/user/:userId", (req, res) => getUser(req, res));
+AuthRouter.get("/group/:groupId/invite", (req, res) =>
+  getGroupInvites(req, res)
+);
+AuthRouter.post("/user/invite/:inviteId", (req, res) => acceptInvite(req, res));
+AuthRouter.delete("/group/:groupId/invite/:inviteId", (req, res) =>
+  cancelInvite(req, res)
+);
+AuthRouter.delete("/user/invite/:inviteId", (req, res) =>
+  rejectInvite(req, res)
+);
 AuthRouter.post("/todo", (req, res) => addTodo(req, res));
-AuthRouter.get('/user/invite',(req,res)=>getUserInvites(req,res))
-AuthRouter.get('/user/:userId',(req,res)=>getUser(req,res))
-AuthRouter.get('/group/:groupId',(req,res)=>getGroup(req,res))
 AuthRouter.delete("/todo/:todoId", (req, res) => deleteTodo(req, res));
 AuthRouter.get("/todo/:todoId", (req, res) => getTodo(req, res));
 AuthRouter.patch("/todo/:todoId", (req, res) => patchTodo(req, res));
-AuthRouter.use("/user/:userId/group", (req, res) => getGroups(req, res));
-AuthRouter.patch('/group/:groupId',(req,res)=>patchGroup(req,res))
-AuthRouter.get("/group/:groupId/todo", (req, res) => getTodos(req, res));
-AuthRouter.post("/group/:groupId/invite",(req,res)=>postNewInvite(req,res))
-AuthRouter.post('/user/invite/:inviteId',(req,res)=>acceptInvite(req,res))
-AuthRouter.delete("/group/:groupId/invite/:inviteId",(req,res)=>cancelInvite(req,res))
-AuthRouter.delete('/user/invite/:inviteId',(req,res)=>rejectInvite(req,res))
-AuthRouter.get('/group/:groupId/invite',(req,res)=>getGroupInvites(req,res))
-
 
 app.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`);

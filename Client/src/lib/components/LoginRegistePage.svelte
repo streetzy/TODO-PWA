@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { onMount } from 'svelte';
     import { isLoggedIn } from '../stores/auth.js'
     import { userJsonData } from '../stores/data.js';
 
