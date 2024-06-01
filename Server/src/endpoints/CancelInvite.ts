@@ -13,21 +13,21 @@ import { JsxFlags } from "typescript";
 
 export async function cancelInvite(req: express.Request, res: express.Response) {
     try {
-        const User = await user.findById(req.body.id).populate("inviteList")
-        if (User) {
-            for (let index = 0; index < User.invitelist.length; index++) {
-                const element = User.invitelist[index];
+        const Group = await group.findById(req.params.groupId)
+        if (Group) {
+            for (let index = 0; index < Group.invitedUsers.length; index++) {
+                const element = Group.invitedUsers[index];
                 if (element._id?.toHexString() == req.params.inviteId) {
 
-                    const Invite = await invite.findById(element.id)
+                    const Invite = await invite.findById(element._id)
                     if (Invite) {
-                        User.invitelist.splice(1, index)
-                        let Group = await group.findById(Invite.group)
-                        if (Group) {
-                            for (let index = 0; index < Group.invitedUsers.length; index++) {
-                                const element = Group.invitedUsers[index];
+                        Group.invitedUsers.splice(1, index)
+                        let User = await user.findById(Invite.invited)
+                        if (User) {
+                            for (let index = 0; index < User.invitelist.length; index++) {
+                                const element = User.invitelist[index];
                                 if (element._id?.toHexString() == req.params.inviteId) {
-                                    Group.invitedUsers.splice(1, index)
+                                    User.invitelist.splice(index, 1)
                                     res.status(200).send("invite rejected")
                                 }
                             }

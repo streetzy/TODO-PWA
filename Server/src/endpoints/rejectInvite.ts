@@ -22,7 +22,7 @@ export async function rejectInvite(req: express.Request, res: express.Response) 
 
                     const Invite = await invite.findById(element.id)
                     if (Invite) {
-                        User.invitelist.splice(1, index)
+                        User.invitelist.splice(index, 1)
                         let Group = await group.findById(Invite.group)
                         if (Group) {
                             for (let index = 0; index < Group.invitedUsers.length; index++) {
