@@ -27,11 +27,11 @@ export async function getGroupInvites(
             };
             InviteList.push(NameId);
           }
-          res.status(200).json(InviteList);
+          return res.status(200).json(InviteList);
         }
       }
     } else {
-      res.status(404).send("group not found");
+      return res.status(404).send("group not found");
     }
   } catch (error) {
     res.status(500).send("internal error");

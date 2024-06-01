@@ -2,13 +2,15 @@
     
     import { onMount } from "svelte";
     import { userJsonData, viewedGroupId, viewedGroupName, inCalendarView } from "../stores/data";
+    import { isLoggedIn } from '../stores/auth.js'
 
     const URL: string = "http://localhost:3000/";
 
     let isInInviteView: boolean = false;
     let acceptingInvites: boolean = false;
     let showAddInviteWindow: boolean = false;
-    let groupInvites: {inviteId: string, userName: string}[];
+    let groupInvites: {inviteId: string, UserName: string}[] = [];
+    let userInvites: {inviteId: string, groupName: string}[] = [];
 
     let isInGroupView: boolean = false;
     let addingGroup: boolean = false;
@@ -122,7 +124,6 @@
         userGroupData = await response.json();
     }
 
-
     async function addTodo() {
         await fetch(URL + "todo", {
             headers: {
@@ -218,8 +219,61 @@
         showEditingTodoWindow();
     }
 
-    async function addInvite() {
+    async function addInvite() { //functions similar to steam, "send me ur code (in this case the userId)" to test sampleuserID: 66265d5a13fec2e587d51488
+        await fetch(URL + "group/" + currentGroupId + "/invite", {
+            headers: {
+                "Authorization": `${accessToken}`,
+                "Content-Type": "application/json"
+            },
+            mode: "cors",
+            method: "POST",
+            body: JSON.stringify({
+                "userId": (document.getElementById("requested-user-id") as HTMLInputElement).value
+            })
+        })
 
+        showAddInviteView();
+    }
+
+    async function cancelInvite(inviteId: string) {
+        await fetch(URL + "group/" + currentGroupId + "/invite/" + inviteId, {
+            headers: {
+                "Authorization": `${accessToken}`,
+                "Content-Type": "application/json"
+            },
+            mode: "cors",
+            method: "DELETE"
+        })
+
+        getGroupInvites();
+    }
+
+    async function rejectInvite(inviteId: string) {
+        await fetch(URL + "user/invite/" + inviteId, {
+            headers: {
+                "Authorization": `${accessToken}`,
+                "Content-Type": "application/json"
+            },
+            mode: "cors",
+            method: "DELETE"
+        })
+
+        getUserInvites();
+        getGroupInvites();
+    }
+
+    async function acceptInvite(inviteId: string) {
+        await fetch(URL + "user/invite/" + inviteId, {
+            headers: {
+                "Authorization": `${accessToken}`,
+                "Content-Type": "application/json"
+            },
+            mode: "cors",
+            method: "POST"
+        })
+
+        getUserInvites();
+        getGroupInvites();
     }
 
     async function getGroupInvites() {
@@ -233,25 +287,66 @@
         })
 
         groupInvites = await response.json();
-        console.log(groupInvites);
+        groupInvites = groupInvites.filter((pair) => Object.keys(pair).length > 0); //remove undefined entries leftover from cancelling...
+    }
+
+    async function signOut() {
+        await fetch(URL + "login", {
+            headers: {
+                "Authorization": `${accessToken}`,
+                "Content-Type": "application/json"
+            },
+            mode: "cors",
+            method: "DELETE"
+        })
+
+        accessToken = undefined;
+
+        isLoggedIn.set(false);
+    }
+
+    async function getUserInvites() {
+        const response = await fetch(URL + "user/invite", {
+            headers: {
+                "Authorization": `${accessToken}`,
+                "Content-Type": "application/json"
+            },
+            mode: "cors",
+            method: "GET"
+        })
+
+        userInvites = await response.json();
+        userInvites = userInvites.filter((pair) => Object.keys(pair).length > 0);
+
+        console.log(userInvites);
+    }
+
+
+    function showAddInviteView() {
+        getGroupInvites();
+
+        showAddInviteWindow = !showAddInviteWindow;
     }
 
     function acceptingInviteView() {
+        getUserInvites();
+
+        if(showAddInviteWindow) showAddInviteView();
         acceptingInvites = !acceptingInvites;
     }
     
     function showInviteView () {
-        isInInviteView = !isInInviteView
-
         wantedUserId = userId;
         getUserInfo();
         getGroupInvites();
+
+        isInInviteView = !isInInviteView
     }
 
     function showGroupPopUp() {
-        groupPopUpFlag = !groupPopUpFlag;
-
         findUserGroups();
+
+        groupPopUpFlag = !groupPopUpFlag;
     }
 
     function showAddingTodoWindow() {
@@ -265,14 +360,45 @@
 </script>
     
 <main>
+    {#if showAddInviteWindow} <!--reused CSS properties, that's why naming might seem confusing-->
+    <div class="adding-todo-window">
+        <div class="invite-window-ordering">
+            <h1>UserID to invite to group</h1>
+            <input type="text" id="requested-user-id" class="invite-user-id" placeholder="Enter UserID here">
+            <button class="add-button" on:click={()=>addInvite()}>ADD USER</button>
+        </div>
+    </div>
+    {/if}
     {#if isInInviteView}
         <div class="invite-view-content">
             <nav>
                 <button class="button-text" on:click={()=>showInviteView()}>TODOs</button>
-                <button class="button-text" on:click={()=>addInvite()}>ADD</button>
+                {#if !acceptingInvites}
+                <button class="button-text" on:click={()=>showAddInviteView()}>ADD</button>
+                {/if}
                 <button class="button-text" on:click={()=>acceptingInviteView()}>{acceptingInvites ? "GROUP VIEW" : "USER VIEW"}</button>
                 <h1 class="username">{acceptingInvites ? requestedUserInfo.userName : currentGroupName}</h1>
             </nav>
+            <div class="shown-invite-view">
+                {#if acceptingInvites} <!--in USER view-->
+                {#each userInvites as userInvite}
+                <div class="shown-invite">
+                    <p class="shown-invite-name">{userInvite.groupName}</p>
+                    <div class="invite-buttons">
+                        <button class="shown-invite-request" on:click={()=>acceptInvite(userInvite.inviteId)}>&#x2713;</button> <!--Checkmark-->
+                        <button class="shown-invite-request" on:click={()=>rejectInvite(userInvite.inviteId)}>X</button>
+                    </div>
+                </div>
+                {/each}
+                {:else} <!--in GROUP view-->
+                {#each groupInvites as groupInvite}
+                <div class="shown-invite">
+                    <p class="shown-invite-name">{groupInvite.UserName}</p>
+                    <button class="shown-invite-cancel" on:click={()=>cancelInvite(groupInvite.inviteId)}>CANCEL</button>
+                </div>
+                {/each}
+                {/if}
+            </div>
         </div>
     {/if}
     {#if editingTodoWindow} <!--haha same chunk of code but too dumb to remake this in a smart away whilst utilizing Svelte-->
@@ -345,7 +471,10 @@
         <button class="invite-view" on:click={() => showInviteView()}><h1 class="button-text">INVITES</h1></button>
         <div class="dropdown">
             <h1 class="username">{currentGroupName}</h1>
-            <button class="sign-out">SIGN OUT</button>
+            <div class="dropdown-content">
+                <h3 class="user-id">UserID: {userId}</h3>
+                <button class="sign-out" on:click={()=>signOut()}>SIGN OUT</button>
+            </div>
         </div>
     </nav>
 
@@ -435,6 +564,64 @@
         background-color: #393939;
     }
 
+    .invite-user-id {
+        width: 50%;
+        text-align: center;
+    }
+    
+    .invite-window-ordering {
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+        width: 100%;
+        align-items: center;
+        justify-content: center;
+        gap: 0.2rem;
+    }
+
+    .invite-buttons {
+        width: 5vw;
+        height: 100%;
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        align-items: center;
+        gap: 0.3rem;
+    }
+
+    .shown-invite-request {
+        width: 100%;
+        height: 90%;
+        text-align: center;
+    }
+
+    .shown-invite-view {
+        display: flex;
+        flex-direction: column;
+        gap: 0.2rem;
+        align-items: center;
+        height: 87.5vh;
+        width: 100vw;
+        overflow-y: auto;
+    }
+
+    .shown-invite {
+        display: flex;
+        flex-direction: row;
+        border-color:#4E4E4E;
+        border-style: solid;
+        width: 100vw;
+        height: 5%;
+        font-size: 1.4rem;
+        align-items: center;
+        justify-content: space-between;
+    }
+
+    .shown-invite-cancel {
+        height: 100%;
+        width: 7.5%;
+    }
+
     .invite-view-content {
         position: absolute;
         top: 0;
@@ -444,8 +631,9 @@
         background-color: #393939;
     }
 
-    .invite-view-content {
+    .invite-view-content nav {
         z-index: 3;
+        height: 12.5vh;
     }
 
     .todo-input {
@@ -484,7 +672,7 @@
         height: 60vh;
         position: absolute;
         background-color: #393939;
-        z-index: 3;
+        z-index: 6;
         display: flex;
         flex-direction: column;
         justify-content: center;
@@ -597,7 +785,7 @@
 
     nav > button {
         height: 90%;
-        width: 28rem;
+        width: 20rem;
         font-size: 3rem;
         border-radius: 2rem;
         border-style: solid;
@@ -606,22 +794,16 @@
 
     .button-text {
         line-height: 0;
-        font-size: 3rem;
+        font-size: 2rem;
+        text-align: center;
     }
+    
+    
 
     .username {
         z-index: 2;
         line-height: 0;
-        font-size: 3rem;
-    }
-
-    .sign-out {
-        z-index: 1;
-        height: 100%;
-        width: 100%;
-        display: none;
-        padding-top: 6rem;
-        font-size: 2rem;
+        font-size: 1.5rem;
     }
 
     .dropdown {
@@ -630,10 +812,18 @@
         display: flex;
         align-items: center;
         justify-content: center;
+        position: relative;
     }
 
-    .dropdown:hover button {
-        display: initial;
+    .dropdown-content {
+        display: none;
+    }
+
+    .dropdown:hover .dropdown-content {
+        z-index: 6;
+        top: 4rem;
+        display: block;
+        position: absolute;
         background-color: #4E4E4E;
         border-color: #4E4E4E;
         border-style: solid;
@@ -641,6 +831,11 @@
 
     .dropdown:hover .username {
         position: absolute;
+    }
+
+    .dropdown:hover .dropdown-content .sign-out {
+        top: 6rem;
+        width: 100%;
     }
 
     .content {
@@ -704,11 +899,13 @@
         justify-content: center;
         align-items: center;
         font-size: 1.5rem;
+        overflow-y: auto;
     }
 
     .todo-items {
         width: 90%;
         height: 80%;
+        overflow-y: auto;
     }
 
     .todo-item {

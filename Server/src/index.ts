@@ -54,7 +54,6 @@ AuthRouter.use((req, res, next) => AuthMidleware(req, res, next));
 
 AuthRouter.delete("/login", (req, res) => logOut(req, res));
 AuthRouter.patch("/user", (req, res) => patchUser(req, res));
-AuthRouter.get("/user/:userId", (req, res) => getUser(req, res));
 
 AuthRouter.use("/user/:userId/group", (req, res) => getGroups(req, res));
 
@@ -66,7 +65,12 @@ AuthRouter.get("/group/:groupId/todo", (req, res) => getTodos(req, res));
 AuthRouter.post("/group/:groupId/invite", (req, res) =>
   postNewInvite(req, res)
 );
-AuthRouter.get("/user/invite", (req, res) => getUserInvites(req, res));
+
+AuthRouter.get("/user/invite", (req, res) => {
+  getUserInvites(req, res);
+});
+
+AuthRouter.get("/user/:userId", (req, res) => getUser(req, res));
 AuthRouter.get("/group/:groupId/invite", (req, res) =>
   getGroupInvites(req, res)
 );
@@ -74,7 +78,7 @@ AuthRouter.post("/user/invite/:inviteId", (req, res) => acceptInvite(req, res));
 AuthRouter.delete("/group/:groupId/invite/:inviteId", (req, res) =>
   cancelInvite(req, res)
 );
-AuthRouter.delete("/user/:userId/invite/:inviteId", (req, res) =>
+AuthRouter.delete("/user/invite/:inviteId", (req, res) =>
   rejectInvite(req, res)
 );
 AuthRouter.post("/todo", (req, res) => addTodo(req, res));

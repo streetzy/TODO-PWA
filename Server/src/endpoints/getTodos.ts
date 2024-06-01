@@ -8,6 +8,7 @@ export async function getTodos(req: express.Request, res: express.Response) {
     todoName: string;
     todoId: string | undefined;
     status: string;
+    deadline: string | null | undefined;
   }[] = [];
   if (Group) {
     for (let entry = 0; entry < Group.todos.length; entry++) {
@@ -17,6 +18,7 @@ export async function getTodos(req: express.Request, res: express.Response) {
           todoName: Todo.todoName,
           todoId: Todo.id,
           status: Todo.status,
+          deadline: Todo.deadline,
         });
       } else {
         res.status(404).send("TODO NOT FOUND");
