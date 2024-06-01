@@ -22,7 +22,7 @@ WEEK 19.5 - 26.5{
     -  testing of group endpoints(surprisingly successful).
 
     issues and how they were fixed:
-    -  Most issues were minor, mostly misspelling and some comunication errors.
+    -  Most issues were minor, mostly misspelling and some communication errors.
     -  All of them were quickly resolved so this stage went relatively smoothly
 }
 WEEK 27.5 - 1.6{
@@ -34,8 +34,8 @@ WEEK 27.5 - 1.6{
     -  Testing funcionality of final product
 
     issues and how they were fixed:
-    - Trying out mongoose populate function. It took some work to get it set up and running with TypeScript, mostly brecause of my inexperience with mongoose. After some googling and hit or miss type conversion. We made it work.
-    - req.body.id
-    - We had a little problem with some endpoints not responding correctly, doing nothing and returning status 500, but we relatively quickly realised, that it was caused by incorect order of our endpoints in index file. Some endpoints were handling request that they werent supposed to. We quickly solved the problem by rearranging the endpoints.
+    - Trying out mongoose populate function. It took some work to get it set up and running with TypeScript, mostly because of our inexperience with mongoose. After some googling and hit or miss type conversion, we made it work.
+    - req.body.id (mainly a communication error)
+    - We had a few problems with some endpoints not responding correctly, doing nothing and returning status 500, but we relatively quickly realised that it was caused by an incorect order of our endpoints in the index file. Some endpoints were handling requests that they weren't supposed to. We quickly solved the problem by rearranging the endpoints.
 
 }

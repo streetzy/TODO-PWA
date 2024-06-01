@@ -29,9 +29,8 @@ export async function AuthMidleware(
 
         if (id) {
           req.body.id = id;
-          let gg = req.body.id.id;
-          req.body.id = gg;
-          console.log("authmidleware succesfull");
+          let tempId = req.body.id.id;
+          req.body.id = tempId;
           next();
         }
       });
