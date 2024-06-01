@@ -32,6 +32,7 @@ export async function getGroupInvites(
       }
     } else {
       return res.status(404).send("group not found");
+
     }
   } catch (error) {
     res.status(500).send("internal error");

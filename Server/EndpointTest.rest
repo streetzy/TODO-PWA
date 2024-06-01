@@ -67,3 +67,14 @@ Authorization: : eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2NThjNWY2NjNhZD
 
 
 ###
+DELETE  http://localhost:3000/user/invite/6659ce5e2c94534cc6f5ce6d
+Content-Type: application/json
+Authorization: : eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2NThjNWY2NjNhZDdhMGNmZDNjZjc5ZSIsImlhdCI6MTcxNzE2Nzg1NiwiZXhwIjoxNzE3MTY5NjU2fQ.O7YUfBScLF7yHXdREYTVbBMIbXkBD6YHtp_mCgejSfM
+
+
+###
+GET http://localhost:3000/user/invite
+Authorization: : eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2NThjNWY2NjNhZDdhMGNmZDNjZjc5ZSIsImlhdCI6MTcxNzIyNzQwNCwiZXhwIjoxNzE3MjI5MjA0fQ.wUiCZgb8csPL-Zu__Wx_yddwHlv1llEdjGwzsyqWAC4
+###
+GET http://localhost:3000/group/6659cad668b199c72e9a401e/invite
+Authorization: : eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2NThjNWY2NjNhZDdhMGNmZDNjZjc5ZSIsImlhdCI6MTcxNzIyNzY3MiwiZXhwIjoxNzE3MjI5NDcyfQ.DkSaWHIrRKGfEpXl2o1mMRKPGCwPycWKaUGUDTbRY18

@@ -21,7 +21,6 @@ export async function rejectInvite(
 ) {
   try {
     const User = await user.findById(req.body.id);
-
     if (User) {
       for (let index = 0; index < User.invitelist.length; index++) {
         const element = User.invitelist[index];

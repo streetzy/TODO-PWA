@@ -23,8 +23,6 @@ export async function postNewInvite(
             group: req.params.groupId,
           });
           await Invite.save();
-
-          console.log(Invite._id);
           User.invitelist.push(Invite._id);
           Group.invitedUsers.push(Invite._id);
           await User.save();

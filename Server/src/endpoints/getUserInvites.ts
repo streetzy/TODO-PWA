@@ -28,6 +28,7 @@ export async function getUserInvites(
       res.status(200).json(InviteList);
     } else {
       res.status(404).send("user not found");
+
     }
   } catch (error) {
     console.log(error);

@@ -25,7 +25,6 @@ import { getGroups } from "./endpoints/getGroups.js";
 import { getTodos } from "./endpoints/getTodos.js";
 import { getUserInvites } from "./endpoints/getUserInvites.js";
 import { getGroupInvites } from "./endpoints/getGroupInvites.js";
-
 const app = express();
 const PORT = 3000;
 const AuthRouter: express.Router = express.Router();
@@ -94,7 +93,6 @@ app.listen(PORT, () => {
 // DELETE /login/ => deletes refresh token from db
 
 // GET /user/:userId
-// GET /user/:userId/group
 // /register => POST /user
 // PATCH /user/:userId
 
