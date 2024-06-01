@@ -4,7 +4,7 @@ TODO PWA with users, groups and a calendar for deadlines. Not a PWA currently th
 
 Spoštění backend - Ve složce Server
 npm i
-npm start
+npm start (fix pres npm uninstall tsc)
 pokud nefunguje tak: node ./dist/index.js
 
 Spouštění frontend - Ve složce Client
